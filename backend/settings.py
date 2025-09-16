@@ -73,13 +73,19 @@ TIME_ZONE = "America/La_Paz"
 LANGUAGE_CODE = "es"
 USE_TZ = True
 
-# Database: Postgres en producción, SQLite en local
+
+# settings.py
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'xDFPNklpQdkPEFRYjdMmdDGDKmzmgGff',
+        'HOST': 'switchyard.proxy.rlwy.net',
+        'PORT': '21139',
     }
 }
+
 
 
 STATIC_URL = "/static/"
