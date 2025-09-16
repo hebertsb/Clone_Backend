@@ -1,0 +1,10 @@
+{
+  "descuentos": [
+    {"codigo":"DSC10","tipo":"PORCENTAJE","valor":"10.00","estado":true},
+    {"codigo":"MENOS5","tipo":"FIJO","valor":"5.00","estado":true}
+  ],
+  "servicios_descuentos": [
+    {"servicio":{"titulo":"Tour por la ciudad","categoria":"Tours"}, "descuento":"DSC10", "prioridad":1, "exclusivo":true, "estado":true},
+    {"servicio":{"titulo":"Tour por la ciudad","categoria":"Tours"}, "descuento":"MENOS5", "prioridad":2, "exclusivo":false, "estado":true}
+  ]
+}

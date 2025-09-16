@@ -1,0 +1,11 @@
+-- SQL inserts for model: authz.Usuario (table: authz_usuario)
+BEGIN;
+INSERT INTO "authz_usuario" ("id", "password", "last_login", "is_superuser", "nombres", "apellidos", "email", "telefono", "fecha_nacimiento", "genero", "documento_identidad", "pais", "estado", "is_active", "is_staff", "date_joined") VALUES (1, 'pbkdf2_sha256$1000000$oerO2VSQ6YZPHaQrctxWWb$ZPDBZkCpv3Srr4R7Iw5SE0PlIF17fT7o1eRhza4vLJs=', NULL, false, 'hebert', 'suarez burgos', 'suarezburgoshebert@gmail.com', NULL, NULL, NULL, NULL, NULL, 'ACTIVO', true, false, '2025-09-15T15:31:49.220204+00:00');
+INSERT INTO "authz_usuario" ("id", "password", "last_login", "is_superuser", "nombres", "apellidos", "email", "telefono", "fecha_nacimiento", "genero", "documento_identidad", "pais", "estado", "is_active", "is_staff", "date_joined") VALUES (2, 'pbkdf2_sha256$1000000$g2vzemsKt1mtR8SuRbhUed$FkU+UoLrQ1HNKOx83gSezQC2asCcQQACxXUu5ITtf98=', NULL, false, 'Gabriel', 'Moreno', 'gabriel.moreno@autonoma.edu.bo', '70000001', NULL, NULL, NULL, NULL, 'ACTIVO', true, false, '2025-09-15T15:32:31.424619+00:00');
+INSERT INTO "authz_usuario" ("id", "password", "last_login", "is_superuser", "nombres", "apellidos", "email", "telefono", "fecha_nacimiento", "genero", "documento_identidad", "pais", "estado", "is_active", "is_staff", "date_joined") VALUES (3, 'pbkdf2_sha256$1000000$jRpfdqNXSmqzN2YNKfpUDR$wt4EyvO3KdSqUV4iTyi3CkP2g8TUL6xC4baPjPHUQtU=', NULL, false, 'María', 'Fernández', 'maria.fernandez@autonoma.edu.bo', '70000002', NULL, NULL, NULL, NULL, 'ACTIVO', true, false, '2025-09-15T15:32:32.772412+00:00');
+INSERT INTO "authz_usuario" ("id", "password", "last_login", "is_superuser", "nombres", "apellidos", "email", "telefono", "fecha_nacimiento", "genero", "documento_identidad", "pais", "estado", "is_active", "is_staff", "date_joined") VALUES (4, 'pbkdf2_sha256$1000000$BTEBvNVN9PhDTwLTZp8hfO$wUPHG4+y2whAb1ooWXeif9oZeBoCgzaEe4urJ/8lu/4=', NULL, false, 'Juan', 'Pérez', 'juan.perez@autonoma.edu.bo', '70000003', NULL, NULL, NULL, NULL, 'ACTIVO', true, false, '2025-09-15T15:32:34.083345+00:00');
+INSERT INTO "authz_usuario_roles" ("usuario_id","rol_id") VALUES (2, 1);
+INSERT INTO "authz_usuario_roles" ("usuario_id","rol_id") VALUES (3, 2);
+INSERT INTO "authz_usuario_roles" ("usuario_id","rol_id") VALUES (4, 3);
+SELECT setval(pg_get_serial_sequence('authz_usuario','id'), 4, true);
+COMMIT;

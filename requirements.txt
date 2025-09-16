@@ -1,0 +1,9 @@
+Django>=4.2
+djangorestframework
+python-dotenv
+djangorestframework-simplejwt
+psycopg2-binary
+django-cors-headers
+dj-database-url
+drf-spectacular
+whitenoise

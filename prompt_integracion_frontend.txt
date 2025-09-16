@@ -1,0 +1,61 @@
+# Asignación de roles en el registro de usuario
+
+1. **¿Qué rol asigna el backend por defecto al registrar un usuario?**
+	- El backend asigna automáticamente el rol CLIENTE a todos los nuevos usuarios registrados.
+	- El endpoint de registro (por ejemplo, /api/auth/register/ o /api/usuarios/) asigna el rol CLIENTE por defecto, no el rol con ID 3 necesariamente, sino el que tenga el nombre "CLIENTE" en la tabla de roles.
+	- No hay lógica para asignar otro rol (como ADMIN) por defecto al registrar usuarios desde el frontend.
+
+2. **¿El backend permite que el frontend envíe el campo rol o roles en el registro?**
+	- El backend ignora cualquier campo de rol o roles que llegue desde el frontend en el registro.
+	- Siempre asigna el rol CLIENTE, aunque el formulario envíe otro valor.
+
+3. **Código relevante del endpoint de registro:**
+```python
+def create(self, validated_data):
+	 validated_data.pop('password_confirm')
+	 password = validated_data.pop('password')
+	 user = Usuario(**validated_data)
+	 user.set_password(password)
+	 user.save()
+	 from .models import Rol
+	 rol_cliente, _ = Rol.objects.get_or_create(nombre="CLIENTE")
+	 user.roles.add(rol_cliente)
+	 return user
+```
+	- Aquí se fuerza la asignación del rol CLIENTE al usuario recién creado.
+
+4. **¿Qué datos está recibiendo realmente el backend en la petición de registro?**
+	- El backend recibe los campos definidos en el serializer (nombres, apellidos, email, password, etc.).
+	- Si el frontend envía un campo roles o rol, el serializer lo ignora y no lo usa.
+	- Puedes agregar un print(request.data) en la vista de registro para ver exactamente qué llega.
+
+5. **¿Cómo se relacionan los roles con el usuario en la base de datos?**
+	- El modelo Usuario tiene una relación ManyToMany con la tabla Rol:
+	  ```python
+	  roles = models.ManyToManyField(Rol, related_name="usuarios", blank=True)
+	  ```
+	- No hay valor por defecto en el modelo, pero el serializer de registro siempre asigna CLIENTE.
+
+**Extra:**
+- Ejemplo de JSON recibido en registro:
+```json
+{
+  "nombres": "Juan",
+  "apellidos": "Pérez",
+  "email": "juan.perez@email.com",
+  "password": "MiPassword123!",
+  "password_confirm": "MiPassword123!",
+  "telefono": "+591 70123456"
+}
+```
+- Ejemplo de usuario creado en la base de datos tras registro:
+```json
+{
+  "id": 5,
+  "nombres": "Juan",
+  "apellidos": "Pérez",
+  "email": "juan.perez@email.com",
+  "telefono": "+591 70123456",
+  "roles": [ID_DEL_ROL_CLIENTE]
+}
+```

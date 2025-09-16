@@ -1,0 +1,9 @@
+{
+  "fecha_inicio": "2025-09-15T09:00:00-04:00",
+  "total": 300.00,
+  "moneda": "BOB",
+  "detalles": [
+    {"servicio": 1, "cantidad": 2, "precio_unitario": 100.00, "fecha_servicio": "2025-09-15T09:00:00-04:00"},
+    {"servicio": 2, "cantidad": 1, "precio_unitario": 100.00, "fecha_servicio": "2025-09-16T09:00:00-04:00"}
+  ]
+}

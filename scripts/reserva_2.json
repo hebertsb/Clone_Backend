@@ -1,0 +1,52 @@
+﻿{
+    "id":  2,
+    "usuario":  {
+                    "id":  4,
+                    "nombres":  "hebert",
+                    "apellidos":  "suarez burgos",
+                    "email":  "suarezburgoshebert@gmail.com",
+                    "telefono":  "+591 731449637"
+                },
+    "fecha_inicio":  "2025-09-15T09:00:00-04:00",
+    "estado":  "PENDIENTE",
+    "cupon":  null,
+    "total":  "300.00",
+    "moneda":  "BOB",
+    "detalles":  [
+                     {
+                         "servicio":  1,
+                         "tipo":  "TOUR",
+                         "titulo":  "Tour por la ciudad",
+                         "cantidad":  2,
+                         "precio_unitario":  "100.00",
+                         "fecha_servicio":  "2025-09-15T09:00:00-04:00"
+                     },
+                     {
+                         "servicio":  2,
+                         "tipo":  "TOUR",
+                         "titulo":  "Tour de aventura",
+                         "cantidad":  1,
+                         "precio_unitario":  "100.00",
+                         "fecha_servicio":  "2025-09-16T09:00:00-04:00"
+                     }
+                 ],
+    "acompanantes":  [
+                         {
+                             "reserva":  2,
+                             "acompanante":  {
+                                                 "id":  1,
+                                                 "nombre":  "Hebert",
+                                                 "apellido":  "Suarez",
+                                                 "documento":  "12730324",
+                                                 "fecha_nacimiento":  "1999-08-01",
+                                                 "nacionalidad":  "Bolivia",
+                                                 "email":  "suarezburgoshebert@gmail.com",
+                                                 "telefono":  "+591 731449637"
+                                             },
+                             "estado":  "CONFIRMADO",
+                             "es_titular":  true
+                         }
+                     ],
+    "created_at":  "2025-09-12T21:57:11.185298-04:00",
+    "updated_at":  "2025-09-12T21:57:11.185298-04:00"
+}

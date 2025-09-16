@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../FRONTEND/frontendFinal"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "frontendFinal\\node_modules\\typescript\\lib",
+		"powershell.cwd": "back2final"
+	}
+}

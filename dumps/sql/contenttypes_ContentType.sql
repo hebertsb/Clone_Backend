@@ -1,0 +1,23 @@
+-- SQL inserts for model: contenttypes.ContentType (table: django_content_type)
+BEGIN;
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (1, 'admin', 'logentry');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (2, 'auth', 'permission');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (3, 'auth', 'group');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (4, 'contenttypes', 'contenttype');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (5, 'sessions', 'session');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (6, 'authz', 'rol');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (7, 'authz', 'usuario');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (8, 'catalogo', 'categoria');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (9, 'catalogo', 'destino');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (10, 'catalogo', 'itinerario');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (11, 'catalogo', 'paquete');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (12, 'catalogo', 'servicio');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (13, 'reservas', 'acompanante');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (14, 'reservas', 'reserva');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (15, 'reservas', 'reservaacompanante');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (16, 'reservas', 'reservaservicio');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (17, 'cupones', 'cupon');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (18, 'descuentos', 'descuento');
+INSERT INTO "django_content_type" ("id", "app_label", "model") VALUES (19, 'descuentos', 'serviciodescuento');
+SELECT setval(pg_get_serial_sequence('django_content_type','id'), 19, true);
+COMMIT;

@@ -1,0 +1,266 @@
+{
+  "categorias": [
+    {
+      "nombre": "Tours",
+      "descripcion": "Actividades turísticas"
+    },
+    {
+      "nombre": "Alojamiento",
+      "descripcion": "Opciones de hospedaje"
+    },
+    {
+      "nombre": "Transporte",
+      "descripcion": "Servicios de transporte para turistas"
+    },
+    {
+      "nombre": "Actividades",
+      "descripcion": "Actividades recreativas y deportivas"
+    },
+    {
+      "nombre": "Experiencias Gastronómicas",
+      "descripcion": "Experiencias culinarias y gastronómicas"
+    },
+    {
+      "nombre": "Bienestar",
+      "descripcion": "Servicios de relajación y bienestar"
+    },
+    {
+      "nombre": "Culturales",
+      "descripcion": "Experiencias culturales y artísticas"
+    },
+    {
+      "nombre": "Ecológicos",
+      "descripcion": "Turismo sostenible y ecológico"
+    },
+    {
+      "nombre": "De lujo",
+      "descripcion": "Experiencias exclusivas y de alta gama"
+    },
+    {
+      "nombre": "De aventura",
+      "descripcion": "Actividades extremas para los aventureros"
+    }
+  ],
+  "servicios": [
+    {
+      "tipo": "TOUR",
+      "titulo": "Tour por la ciudad",
+      "descripcion": "Recorrido guiado por los principales puntos turísticos.",
+      "duracion_min": 120,
+      "costo": 100.0,
+      "capacidad_max": 20,
+      "punto_encuentro": "Plaza principal",
+      "visible_publico": true,
+      "categoria": 1
+    },
+    {
+      "tipo": "TOUR",
+      "titulo": "Tour de aventura",
+      "descripcion": "Experiencia extrema en la naturaleza con actividades de rafting.",
+      "duracion_min": 180,
+      "costo": 150.0,
+      "capacidad_max": 12,
+      "punto_encuentro": "Aventura Base Camp",
+      "visible_publico": true,
+      "categoria": 1
+    },
+    {
+      "tipo": "ALOJAMIENTO",
+      "titulo": "Hotel 5 estrellas",
+      "descripcion": "Hospedaje de lujo con vista panorámica al mar.",
+      "duracion_min": 0,
+      "costo": 250.0,
+      "capacidad_max": 100,
+      "punto_encuentro": "Lobby del hotel",
+      "visible_publico": true,
+      "categoria": 2
+    },
+    {
+      "tipo": "ALOJAMIENTO",
+      "titulo": "Cabaña en la montaña",
+      "descripcion": "Escapada a la naturaleza con alojamiento rústico.",
+      "duracion_min": 0,
+      "costo": 80.0,
+      "capacidad_max": 6,
+      "punto_encuentro": "Cabañas del bosque",
+      "visible_publico": true,
+      "categoria": 2
+    },
+    {
+      "tipo": "TRANSPORTE",
+      "titulo": "Transporte privado al aeropuerto",
+      "descripcion": "Servicio de transporte privado desde y hacia el aeropuerto.",
+      "duracion_min": 45,
+      "costo": 50.0,
+      "capacidad_max": 4,
+      "punto_encuentro": "Puerta de llegada",
+      "visible_publico": true,
+      "categoria": 3
+    },
+    {
+      "tipo": "TRANSPORTE",
+      "titulo": "Tour en autobús turístico",
+      "descripcion": "Recorrido en autobús por los puntos turísticos más importantes de la ciudad.",
+      "duracion_min": 150,
+      "costo": 30.0,
+      "capacidad_max": 40,
+      "punto_encuentro": "Estación de autobuses",
+      "visible_publico": true,
+      "categoria": 3
+    },
+    {
+      "tipo": "ACTIVIDAD",
+      "titulo": "Caminata en la selva",
+      "descripcion": "Excursión guiada por la jungla, explorando flora y fauna local.",
+      "duracion_min": 180,
+      "costo": 60.0,
+      "capacidad_max": 15,
+      "punto_encuentro": "Entrada al parque",
+      "visible_publico": true,
+      "categoria": 4
+    },
+    {
+      "tipo": "ACTIVIDAD",
+      "titulo": "Bungee jumping",
+      "descripcion": "Aventura extrema saltando desde un puente.",
+      "duracion_min": 30,
+      "costo": 100.0,
+      "capacidad_max": 10,
+      "punto_encuentro": "Punto de salto",
+      "visible_publico": true,
+      "categoria": 4
+    },
+    {
+      "tipo": "EXPERIENCIA GASTRONÓMICA",
+      "titulo": "Tour gastronómico local",
+      "descripcion": "Visita a restaurantes locales para degustar la comida típica.",
+      "duracion_min": 120,
+      "costo": 40.0,
+      "capacidad_max": 20,
+      "punto_encuentro": "Plaza principal",
+      "visible_publico": true,
+      "categoria": 5
+    },
+    {
+      "tipo": "EXPERIENCIA GASTRONÓMICA",
+      "titulo": "Clase de cocina regional",
+      "descripcion": "Aprende a cocinar platos típicos de la región en un taller práctico.",
+      "duracion_min": 180,
+      "costo": 60.0,
+      "capacidad_max": 10,
+      "punto_encuentro": "Escuela de cocina",
+      "visible_publico": true,
+      "categoria": 5
+    },
+    {
+      "tipo": "BIENESTAR",
+      "titulo": "Retiros de yoga",
+      "descripcion": "Retiro de bienestar para practicar yoga y meditación.",
+      "duracion_min": 480,
+      "costo": 150.0,
+      "capacidad_max": 15,
+      "punto_encuentro": "Centro de bienestar",
+      "visible_publico": true,
+      "categoria": 6
+    },
+    {
+      "tipo": "BIENESTAR",
+      "titulo": "Masajes terapéuticos",
+      "descripcion": "Masajes relajantes y terapéuticos para aliviar tensiones.",
+      "duracion_min": 60,
+      "costo": 50.0,
+      "capacidad_max": 2,
+      "punto_encuentro": "Spa",
+      "visible_publico": true,
+      "categoria": 6
+    },
+    {
+      "tipo": "CULTURAL",
+      "titulo": "Visita a museos de arte",
+      "descripcion": "Tour guiado por los museos más importantes de la ciudad.",
+      "duracion_min": 120,
+      "costo": 20.0,
+      "capacidad_max": 25,
+      "punto_encuentro": "Museo de Arte Moderno",
+      "visible_publico": true,
+      "categoria": 7
+    },
+    {
+      "tipo": "CULTURAL",
+      "titulo": "Espectáculo de danza folklórica",
+      "descripcion": "Disfruta de una representación de danza folklórica tradicional.",
+      "duracion_min": 90,
+      "costo": 35.0,
+      "capacidad_max": 50,
+      "punto_encuentro": "Teatro de la ciudad",
+      "visible_publico": true,
+      "categoria": 7
+    },
+    {
+      "tipo": "ECOLOGICO",
+      "titulo": "Avistamiento de aves",
+      "descripcion": "Excursión para observar las aves en su hábitat natural.",
+      "duracion_min": 180,
+      "costo": 70.0,
+      "capacidad_max": 12,
+      "punto_encuentro": "Reserva natural",
+      "visible_publico": true,
+      "categoria": 8
+    },
+    {
+      "tipo": "ECOLOGICO",
+      "titulo": "Ecoturismo",
+      "descripcion": "Excursión a parques naturales para promover el ecoturismo.",
+      "duracion_min": 240,
+      "costo": 90.0,
+      "capacidad_max": 10,
+      "punto_encuentro": "Centro de ecoturismo",
+      "visible_publico": true,
+      "categoria": 8
+    },
+    {
+      "tipo": "DE LUJO",
+      "titulo": "Crucero de lujo",
+      "descripcion": "Experiencia de lujo en un crucero por la costa.",
+      "duracion_min": 1440,
+      "costo": 500.0,
+      "capacidad_max": 50,
+      "punto_encuentro": "Puerto",
+      "visible_publico": true,
+      "categoria": 9
+    },
+    {
+      "tipo": "DE LUJO",
+      "titulo": "Cena privada con chef",
+      "descripcion": "Cena exclusiva preparada por un chef en un lugar único.",
+      "duracion_min": 180,
+      "costo": 200.0,
+      "capacidad_max": 10,
+      "punto_encuentro": "Ubicación secreta",
+      "visible_publico": true,
+      "categoria": 9
+    },
+    {
+      "tipo": "DE AVENTURA",
+      "titulo": "Escalada en roca",
+      "descripcion": "Aventura extrema escalando las rocas más desafiantes.",
+      "duracion_min": 180,
+      "costo": 120.0,
+      "capacidad_max": 8,
+      "punto_encuentro": "Centro de escalada",
+      "visible_publico": true,
+      "categoria": 10
+    },
+    {
+      "tipo": "DE AVENTURA",
+      "titulo": "Rafting en río",
+      "descripcion": "Desciende por un río salvaje en una emocionante experiencia de rafting.",
+      "duracion_min": 120,
+      "costo": 90.0,
+      "capacidad_max": 10,
+      "punto_encuentro": "Base del río",
+      "visible_publico": true,
+      "categoria": 10
+    }
+  ]
+}

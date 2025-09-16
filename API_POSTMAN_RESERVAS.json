@@ -1,0 +1,288 @@
+{
+  "info": {
+    "name": "API - Reservas (mínima)",
+    "_postman_id": "api-reservas-minima-001",
+    "description": "Colección mínima para probar los flujos de reservas: login, crear acompañante, crear reserva (nested), asociar acompañante y acciones de estado.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"cliente@example.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login",
+            ""
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "  var json = pm.response.json();",
+              "  pm.environment.set('accessToken', json.access);",
+              "  pm.environment.set('refreshToken', json.refresh || '');",
+              "  console.log('access token saved');",
+              "} else {",
+              "  console.log('login failed', pm.response.code);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Acompanantes - Crear",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"documento\": \"12345678\",\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"fecha_nacimiento\": \"1990-01-01\",\n  \"email\": \"juan.perez@example.com\",\n  \"telefono\": \"+521234567890\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/acompanantes/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "acompanantes",
+            ""
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "  var json = pm.response.json();",
+              "  pm.environment.set('acompananteId', json.id || json.pk || '');",
+              "} else {",
+              "  console.log('crear acompañante falló', pm.response.code);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservas - Crear (nested)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fecha_inicio\": \"2025-10-01T09:00:00Z\",\n  \"fecha_fin\": \"2025-10-05T18:00:00Z\",\n  \"moneda\": \"USD\",\n  \"total\": \"1000.00\",\n  \"detalles\": [\n    {\n      \"servicio\": 1,\n      \"cantidad\": 2,\n      \"precio_unitario\": \"250.00\",\n      \"fecha_servicio\": \"2025-10-02T10:00:00Z\"\n    },\n    {\n      \"servicio\": 2,\n      \"cantidad\": 1,\n      \"precio_unitario\": \"500.00\",\n      \"fecha_servicio\": \"2025-10-03T09:00:00Z\"\n    }\n  ],\n  \"acompanantes\": [\n    {\n      \"documento\": \"12345678\",\n      \"nombre\": \"Juan\",\n      \"apellido\": \"Perez\",\n      \"email\": \"juan.perez@example.com\",\n      \"telefono\": \"+521234567890\",\n      \"es_titular\": true\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/reservas/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reservas",
+            ""
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "  var json = pm.response.json();",
+              "  pm.environment.set('reservaId', json.id || json.pk || '');",
+              "} else {",
+              "  console.log('crear reserva falló', pm.response.code);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReservaAcompanante - Asociar (opcional)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reserva\": {{reservaId}},\n  \"acompanante\": {{acompananteId}},\n  \"es_titular\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/reserva-acompanantes/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reserva-acompanantes",
+            ""
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "  console.log('asociación creada');",
+              "} else {",
+              "  console.log('asociación falló', pm.response.code);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservas - Pagar",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/reservas/{{reservaId}}/pagar/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reservas",
+            "{{reservaId}}",
+            "pagar",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Reservas - Cancelar",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/reservas/{{reservaId}}/cancelar/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reservas",
+            "{{reservaId}}",
+            "cancelar",
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Reservas - Reprogramar",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fecha_inicio\": \"2025-10-02T09:00:00Z\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/reservas/{{reservaId}}/reprogramar/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reservas",
+            "{{reservaId}}",
+            "reprogramar",
+            ""
+          ]
+        }
+      }
+    }
+  ]
+}

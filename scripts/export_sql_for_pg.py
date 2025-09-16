@@ -1,0 +1,169 @@
+import os
+import sys
+import django
+import json
+from pathlib import Path
+from decimal import Decimal
+from datetime import date, datetime
+
+# Preparar entorno Django
+BASE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+django.setup()
+
+from django.apps import apps
+from django.db import models
+from django.db.models import Max
+
+
+OUT_DIR = BASE / 'dumps' / 'sql'
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+SCHEMA_SUMMARY = BASE / 'dumps' / 'schema_summary.md'
+
+
+def sql_quote(val):
+    if val is None:
+        return 'NULL'
+    if isinstance(val, bool):
+        return 'true' if val else 'false'
+    if isinstance(val, (int, Decimal)) and not isinstance(val, bool):
+        return str(val)
+    if isinstance(val, (date, datetime)):
+        return "'{}'".format(val.isoformat())
+    if isinstance(val, (list, dict)):
+        s = json.dumps(val, ensure_ascii=False)
+        s = s.replace("'", "''")
+        return "'{}'".format(s)
+    # fallback: str, escape single quotes
+    s = str(val).replace("'", "''")
+    return "'{}'".format(s)
+
+
+def field_column_name(field):
+    # For most fields, column name is field.column
+    return field.column
+
+
+def export_model(model):
+    app_label = model._meta.app_label
+    model_name = model.__name__
+    table = model._meta.db_table
+    filename = OUT_DIR / f"{app_label}_{model_name}.sql"
+
+    # Collect fields (exclude many-to-many virtual fields)
+    fields = [f for f in model._meta.local_fields]
+    col_names = [field_column_name(f) for f in fields]
+
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write('-- SQL inserts for model: {}.{} (table: {})\n'.format(app_label, model_name, table))
+        f.write('BEGIN;\n')
+
+        qs = model.objects.all()
+        for obj in qs.iterator():
+            values = []
+            for field in fields:
+                # try field.attname (eg: 'categoria_id') then field.name, otherwise None
+                val = None
+                if hasattr(field, 'attname'):
+                    val = getattr(obj, field.attname, None)
+                if val is None and hasattr(field, 'name'):
+                    val = getattr(obj, field.name, None)
+                # for primary key fields, use obj.pk
+                if field.primary_key:
+                    val = getattr(obj, field.attname, None) if hasattr(field, 'attname') else getattr(obj, 'pk', None)
+                values.append(sql_quote(val))
+            cols = ', '.join('"{}"'.format(c) for c in col_names)
+            vals = ', '.join(values)
+            f.write('INSERT INTO "{}" ({}) VALUES ({});\n'.format(table, cols, vals))
+
+        # Handle many-to-many relations (through tables)
+        for m2m in model._meta.many_to_many:
+            # skip auto-created reverse m2m
+            if not m2m.remote_field.through._meta.auto_created and m2m.remote_field.through._meta.auto_created is False:
+                # custom through model — better not try to auto-insert
+                continue
+            through = m2m.remote_field.through
+            through_table = through._meta.db_table
+            # determine column names in through table referencing source and target
+            rel_fields = [f for f in through._meta.local_fields if isinstance(f, models.ForeignKey)]
+            # simple assumption: two FK fields: from and to
+            if len(rel_fields) >= 2:
+                src_field = rel_fields[0]
+                tgt_field = rel_fields[1]
+                for obj in qs.iterator():
+                    related_qs = getattr(obj, m2m.name).all()
+                    for rel in related_qs:
+                        # use obj.pk for source and rel.pk for target (safer than attname on source object)
+                        src_val = getattr(obj, 'pk', None)
+                        tgt_val = getattr(rel, rel._meta.pk.attname, None)
+                        if tgt_val is None:
+                            tgt_val = getattr(rel, 'pk', None)
+                        f.write('INSERT INTO "{}" ("{}","{}") VALUES ({}, {});\n'.format(
+                            through_table, src_field.column, tgt_field.column, sql_quote(src_val), sql_quote(tgt_val)
+                        ))
+
+        # Update sequence for PK if needed
+        pk_field = model._meta.pk
+        if isinstance(pk_field, (models.AutoField, models.BigAutoField)):
+            max_pk = qs.aggregate(max_id=Max(pk_field.attname))['max_id']
+            if max_pk is None:
+                max_pk = 1
+            f.write("SELECT setval(pg_get_serial_sequence('{}','{}'), {}, true);\n".format(table, pk_field.column, max_pk))
+
+        f.write('COMMIT;\n')
+
+    return filename, qs.count()
+
+
+def generate_summary_and_sql():
+    apps_list = [app for app in apps.get_app_configs()]
+    summary_lines = []
+    summary_lines.append('# Schema summary\n')
+    summary_lines.append('Generated by scripts/export_sql_for_pg.py\n')
+
+    total_models = 0
+    for app in apps_list:
+        for model in app.get_models():
+            total_models += 1
+            table = model._meta.db_table
+            pk = model._meta.pk
+            fields = model._meta.get_fields()
+            summary_lines.append('## {}.{} (table: {})\n'.format(model._meta.app_label, model.__name__, table))
+            pk_name = getattr(pk, 'name', getattr(pk, 'attname', 'pk'))
+            summary_lines.append('- PK: {} ({})\n'.format(pk_name, type(pk).__name__))
+            summary_lines.append('- Fields:\n')
+            for f in fields:
+                # skip reverse relations for clarity
+                if getattr(f, 'auto_created', False) and not getattr(f, 'concrete', False):
+                    continue
+                # safely determine a field name (some Field objects may not have 'name')
+                fname = getattr(f, 'name', None) or getattr(f, 'attname', None) or str(f)
+                ftype = type(f).__name__
+                line = f'  - {fname}: {ftype}'
+                # only access related_model attributes if present
+                if getattr(f, 'is_relation', False):
+                    related = getattr(f, 'related_model', None)
+                    if related is not None:
+                        rel_app = getattr(getattr(related, '_meta', None), 'app_label', None)
+                        rel_name = getattr(related, '__name__', None)
+                        if rel_app and rel_name:
+                            line += f' -> {rel_app}.{rel_name}'
+                summary_lines.append(line + '\n')
+
+            # export data and count
+            try:
+                filename, count = export_model(model)
+                summary_lines.append('- Rows exported: {} (file: {})\n'.format(count, filename.relative_to(BASE)))
+            except Exception as e:
+                summary_lines.append('- Rows exported: ERROR ({})\n'.format(e))
+
+    summary_lines.append('\nTotal models processed: {}\n'.format(total_models))
+    with open(SCHEMA_SUMMARY, 'w', encoding='utf-8') as s:
+        s.writelines(line + '\n' if not line.endswith('\n') else line for line in summary_lines)
+    print('Schema summary written to', SCHEMA_SUMMARY)
+    print('SQL files written to', OUT_DIR)
+
+
+if __name__ == '__main__':
+    generate_summary_and_sql()
