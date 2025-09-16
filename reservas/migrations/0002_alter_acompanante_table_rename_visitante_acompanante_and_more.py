@@ -2,7 +2,22 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django.core.management import call_command
+from pathlib import Path
 
+def load_fixtures(apps, schema_editor):
+    app_dir = Path(__file__).resolve().parent.parent
+    fixtures = [app_dir / "fixtures" / "datos_reserva.json"]
+
+    for fixture in fixtures:
+        if fixture.exists():
+            try:
+                print(f"[seed] Cargando {fixture.name}")
+                call_command("loaddata", str(fixture))
+            except Exception as e:
+                print(f"[ERROR] No se pudo cargar {fixture.name}: {e}")
+        else:
+            print(f"[seed] No encontrado: {fixture}")
 
 class Migration(migrations.Migration):
 

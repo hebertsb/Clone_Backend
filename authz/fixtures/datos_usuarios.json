@@ -1,0 +1,50 @@
+[
+  {
+    "model": "authz.usuario",
+    "pk": 1,
+    "fields": {
+      "nombres": "Gabriel",
+      "apellidos": "Moreno",
+      "email": "gabriel.moreno@autonoma.edu.bo",
+      "password": "pbkdf2_sha256$600000$eEj...$HASHAQUI", 
+      "telefono": "70000001",
+      "estado": "ACTIVO",
+      "is_active": true,
+      "is_staff": true,
+      "date_joined": "2025-09-15T12:00:00Z",
+      "roles": [1]
+    }
+  },
+  {
+    "model": "authz.usuario",
+    "pk": 2,
+    "fields": {
+      "nombres": "María",
+      "apellidos": "Fernández",
+      "email": "maria.fernandez@autonoma.edu.bo",
+      "password": "pbkdf2_sha256$600000$eEj...$HASHAQUI",
+      "telefono": "70000002",
+      "estado": "ACTIVO",
+      "is_active": true,
+      "is_staff": false,
+      "date_joined": "2025-09-15T12:00:00Z",
+      "roles": [2]
+    }
+  },
+  {
+    "model": "authz.usuario",
+    "pk": 3,
+    "fields": {
+      "nombres": "Juan",
+      "apellidos": "Pérez",
+      "email": "juan.perez@autonoma.edu.bo",
+      "password": "pbkdf2_sha256$600000$eEj...$HASHAQUI",
+      "telefono": "70000003",
+      "estado": "ACTIVO",
+      "is_active": true,
+      "is_staff": false,
+      "date_joined": "2025-09-15T12:00:00Z",
+      "roles": [3]
+    }
+  }
+]

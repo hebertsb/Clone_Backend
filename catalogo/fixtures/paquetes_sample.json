@@ -1,5 +1,32 @@
 [
   {
+    "model": "catalogo.categoria",
+    "pk": 9,
+    "fields": { "nombre": "Escapadas" }
+  },
+  {
+    "model": "catalogo.categoria",
+    "pk": 10,
+    "fields": { "nombre": "Ecoturismo" }
+  },
+  {
+    "model": "catalogo.categoria",
+    "pk": 11,
+    "fields": { "nombre": "Aventura" }
+  },
+  { "model": "catalogo.categoria", "pk": 12, "fields": { "nombre": "Selva" } },
+  {
+    "model": "catalogo.categoria",
+    "pk": 13,
+    "fields": { "nombre": "Cultural" }
+  },
+  {
+    "model": "catalogo.categoria",
+    "pk": 14,
+    "fields": { "nombre": "Paquetes" }
+  },
+
+  {
     "model": "catalogo.destino",
     "pk": 1,
     "fields": {
@@ -32,13 +59,18 @@
       "updated_at": "2023-09-14T00:00:00Z"
     }
   },
+
   {
     "model": "catalogo.itinerario",
     "pk": 1,
     "fields": {
       "dia": 1,
       "titulo": "Llegada y tour por la ciudad",
-      "actividades": ["Recepción en aeropuerto", "Tour por la ciudad", "Cena privada con chef"],
+      "actividades": [
+        "Recepción en aeropuerto",
+        "Tour por la ciudad",
+        "Cena privada con chef"
+      ],
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -49,7 +81,11 @@
     "fields": {
       "dia": 2,
       "titulo": "Aventura extrema",
-      "actividades": ["Bungee jumping", "Escalada en roca", "Caminata en la selva"],
+      "actividades": [
+        "Bungee jumping",
+        "Escalada en roca",
+        "Caminata en la selva"
+      ],
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -60,7 +96,11 @@
     "fields": {
       "dia": 3,
       "titulo": "Relax y bienestar",
-      "actividades": ["Retiros de yoga", "Masajes terapéuticos", "Tour gastronómico local"],
+      "actividades": [
+        "Retiros de yoga",
+        "Masajes terapéuticos",
+        "Tour gastronómico local"
+      ],
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -71,7 +111,11 @@
     "fields": {
       "dia": 1,
       "titulo": "Exploración cultural",
-      "actividades": ["Visita a museos de arte", "Espectáculo de danza folklórica", "Clase de cocina regional"],
+      "actividades": [
+        "Visita a museos de arte",
+        "Espectáculo de danza folklórica",
+        "Clase de cocina regional"
+      ],
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -87,13 +131,7 @@
       "updated_at": "2023-09-14T00:00:00Z"
     }
   },
-  {
-    "model": "catalogo.categoria",
-    "pk": 14,
-    "fields": {
-      "nombre": "Paquetes"
-    }
-  },
+
   {
     "model": "catalogo.paquete",
     "pk": 1,
@@ -102,7 +140,7 @@
       "ubicacion": "La Paz, Bolivia",
       "descripcion_corta": "Aventura extrema en la ciudad más alta del mundo",
       "descripcion_completa": "Experimenta la adrenalina en La Paz con bungee jumping, escalada y caminatas en la selva.",
-      "calificacion": 4.5,
+      "calificacion": "4.5",
       "numero_reseñas": 120,
       "precio": "450",
       "precio_original": "500",
@@ -110,13 +148,22 @@
       "max_personas": 10,
       "dificultad": "Alta",
       "categoria": 11,
-      "imagenes": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+      "imagenes": [
+        "https://example.com/image1.jpg",
+        "https://example.com/image2.jpg"
+      ],
       "destinos": [1],
       "itinerario": [1, 2],
-      "incluido": ["Tour por la ciudad", "Bungee jumping", "Escalada en roca", "Caminata en la selva", "Cena privada con chef"],
+      "incluido": [
+        "Tour por la ciudad",
+        "Bungee jumping",
+        "Escalada en roca",
+        "Caminata en la selva",
+        "Cena privada con chef"
+      ],
       "no_incluido": ["Vuelos internacionales", "Seguro de viaje"],
       "fechas_disponibles": ["2023-10-01", "2023-10-15", "2023-11-01"],
-      "descuento": 10.00,
+      "descuento": "10.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -129,7 +176,7 @@
       "ubicacion": "Santa Cruz, Bolivia",
       "descripcion_corta": "Relajación en el trópico boliviano",
       "descripcion_completa": "Disfruta de retiros de yoga, masajes y experiencias gastronómicas en Santa Cruz.",
-      "calificacion": 4.8,
+      "calificacion": "4.8",
       "numero_reseñas": 85,
       "precio": "350",
       "precio_original": "400",
@@ -140,10 +187,15 @@
       "imagenes": ["https://example.com/image3.jpg"],
       "destinos": [2],
       "itinerario": [3],
-      "incluido": ["Retiros de yoga", "Masajes terapéuticos", "Tour gastronómico local", "Hotel 5 estrellas"],
+      "incluido": [
+        "Retiros de yoga",
+        "Masajes terapéuticos",
+        "Tour gastronómico local",
+        "Hotel 5 estrellas"
+      ],
       "no_incluido": ["Transporte al aeropuerto", "Bebidas alcohólicas"],
       "fechas_disponibles": ["2023-09-20", "2023-10-05"],
-      "descuento": 5.00,
+      "descuento": "5.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -156,7 +208,7 @@
       "ubicacion": "Sucre, Bolivia",
       "descripcion_corta": "Sumérgete en la historia y cultura de Sucre",
       "descripcion_completa": "Visita museos, disfruta de danzas folklóricas y aprende cocina regional en Sucre.",
-      "calificacion": 4.7,
+      "calificacion": "4.7",
       "numero_reseñas": 95,
       "precio": "250",
       "precio_original": "300",
@@ -167,10 +219,15 @@
       "imagenes": ["https://example.com/image4.jpg"],
       "destinos": [3],
       "itinerario": [4],
-      "incluido": ["Visita a museos de arte", "Espectáculo de danza folklórica", "Clase de cocina regional", "Transporte privado al aeropuerto"],
+      "incluido": [
+        "Visita a museos de arte",
+        "Espectáculo de danza folklórica",
+        "Clase de cocina regional",
+        "Transporte privado al aeropuerto"
+      ],
       "no_incluido": ["Almuerzos", "Souvenirs"],
       "fechas_disponibles": ["2023-11-10", "2023-12-01"],
-      "descuento": 15.00,
+      "descuento": "15.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -183,7 +240,7 @@
       "ubicacion": "La Paz y Santa Cruz, Bolivia",
       "descripcion_corta": "Ecoturismo y aventura en Bolivia",
       "descripcion_completa": "Combina avistamiento de aves, rafting y caminatas en un viaje inolvidable.",
-      "calificacion": 4.6,
+      "calificacion": "4.6",
       "numero_reseñas": 70,
       "precio": "550",
       "precio_original": "600",
@@ -194,10 +251,16 @@
       "imagenes": ["https://example.com/image5.jpg"],
       "destinos": [1, 2],
       "itinerario": [2, 5],
-      "incluido": ["Avistamiento de aves", "Ecoturismo", "Rafting en río", "Caminata en la selva", "Tour en autobús turístico"],
+      "incluido": [
+        "Avistamiento de aves",
+        "Ecoturismo",
+        "Rafting en río",
+        "Caminata en la selva",
+        "Tour en autobús turístico"
+      ],
       "no_incluido": ["Equipo personal", "Propinas"],
       "fechas_disponibles": ["2023-10-20", "2023-11-15"],
-      "descuento": 8.00,
+      "descuento": "8.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
@@ -210,7 +273,7 @@
       "ubicacion": "La Paz, Bolivia",
       "descripcion_corta": "Experiencia de lujo en La Paz",
       "descripcion_completa": "Disfruta de cruceros de lujo, cenas privadas y transporte exclusivo.",
-      "calificacion": 5.0,
+      "calificacion": "5.0",
       "numero_reseñas": 50,
       "precio": "1200",
       "precio_original": "1300",
@@ -221,15 +284,19 @@
       "imagenes": ["https://example.com/image6.jpg"],
       "destinos": [1],
       "itinerario": [1],
-      "incluido": ["Crucero de lujo", "Cena privada con chef", "Transporte privado al aeropuerto", "Hotel 5 estrellas"],
+      "incluido": [
+        "Crucero de lujo",
+        "Cena privada con chef",
+        "Transporte privado al aeropuerto",
+        "Hotel 5 estrellas"
+      ],
       "no_incluido": ["Actividades opcionales", "Bebidas premium"],
       "fechas_disponibles": ["2023-12-01", "2024-01-15"],
-      "descuento": 20.00,
+      "descuento": "20.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
-  }
-  ,
+  },
   {
     "model": "catalogo.paquete",
     "pk": 6,
@@ -238,7 +305,7 @@
       "ubicacion": "La Paz / Titicaca, Bolivia",
       "descripcion_corta": "Excursión familiar al lago Titicaca",
       "descripcion_completa": "Navega por el Lago Titicaca, visita islas tradicionales y disfruta de actividades para toda la familia.",
-      "calificacion": 4.4,
+      "calificacion": "4.4",
       "numero_reseñas": 40,
       "precio": "380",
       "precio_original": "420",
@@ -249,10 +316,15 @@
       "imagenes": ["https://example.com/titicaca1.jpg"],
       "destinos": [1],
       "itinerario": [1, 5],
-      "incluido": ["Transporte terrestre", "Navegación en barco", "Alojamiento", "Guía local"],
+      "incluido": [
+        "Transporte terrestre",
+        "Navegación en barco",
+        "Alojamiento",
+        "Guía local"
+      ],
       "no_incluido": ["Comidas especiales", "Gastos personales"],
       "fechas_disponibles": ["2025-10-10", "2025-11-01"],
-      "descuento": 7.00,
+      "descuento": "7.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
     }
@@ -265,7 +337,7 @@
       "ubicacion": "Santa Cruz, Bolivia",
       "descripcion_corta": "Explora la selva y su biodiversidad",
       "descripcion_completa": "Safari de un día y caminatas guiadas por la selva con alojamiento ecológico.",
-      "calificacion": 4.5,
+      "calificacion": "4.5",
       "numero_reseñas": 28,
       "precio": "420",
       "precio_original": "480",
@@ -279,7 +351,7 @@
       "incluido": ["Traslados", "Guía naturalista", "Alojamiento ecológico"],
       "no_incluido": ["Vuelos", "Seguro"],
       "fechas_disponibles": ["2025-10-20", "2025-11-10"],
-      "descuento": 10.00,
+      "descuento": "10.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
     }
@@ -292,7 +364,7 @@
       "ubicacion": "Sucre, Bolivia",
       "descripcion_corta": "Experiencia culinaria regional",
       "descripcion_completa": "Tours gastronómicos, clases de cocina y visitas a mercados locales.",
-      "calificacion": 4.9,
+      "calificacion": "4.9",
       "numero_reseñas": 18,
       "precio": "300",
       "precio_original": "350",
@@ -306,7 +378,7 @@
       "incluido": ["Clases de cocina", "Degustaciones", "Alojamiento"],
       "no_incluido": ["Bebidas alcohólicas"],
       "fechas_disponibles": ["2025-09-25", "2025-10-15"],
-      "descuento": 5.00,
+      "descuento": "5.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
     }
@@ -319,7 +391,7 @@
       "ubicacion": "La Paz, Bolivia",
       "descripcion_corta": "Trekking de nivel medio en los Andes",
       "descripcion_completa": "Rutas guiadas por montañas, campamento y experiencias culturales en comunidades andinas.",
-      "calificacion": 4.3,
+      "calificacion": "4.3",
       "numero_reseñas": 22,
       "precio": "520",
       "precio_original": "590",
@@ -330,10 +402,14 @@
       "imagenes": ["https://example.com/andes1.jpg"],
       "destinos": [1],
       "itinerario": [2, 3, 5],
-      "incluido": ["Guía de montaña", "Equipo básico", "Alojamiento en refugios"],
+      "incluido": [
+        "Guía de montaña",
+        "Equipo básico",
+        "Alojamiento en refugios"
+      ],
       "no_incluido": ["Seguro de altura", "Comidas extras"],
       "fechas_disponibles": ["2025-10-01", "2025-11-01"],
-      "descuento": 12.00,
+      "descuento": "12.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
     }
@@ -346,7 +422,7 @@
       "ubicacion": "La Paz, Bolivia",
       "descripcion_corta": "Fin de semana urbano con actividades premium",
       "descripcion_completa": "Experiencias gastronómicas, tours privados y alojamiento boutique para un fin de semana inolvidable.",
-      "calificacion": 4.2,
+      "calificacion": "4.2",
       "numero_reseñas": 12,
       "precio": "220",
       "precio_original": "260",
@@ -357,12 +433,44 @@
       "imagenes": ["https://example.com/urban1.jpg"],
       "destinos": [1],
       "itinerario": [1],
-      "incluido": ["Tour privado", "Cena de bienvenida", "Alojamiento boutique"],
+      "incluido": [
+        "Tour privado",
+        "Cena de bienvenida",
+        "Alojamiento boutique"
+      ],
       "no_incluido": ["Traslados al aeropuerto"],
       "fechas_disponibles": ["2025-09-20", "2025-10-10"],
-      "descuento": 6.00,
+      "descuento": "6.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 1,
+    "fields": {
+      "titulo": "Tour Salar de Uyuni",
+      "descripcion": "Excursión de 3 días por el salar",
+      "tipo": "Turismo",
+      "costo": "150.00",
+      "categoria": 9,
+      "visible_publico": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 2,
+    "fields": {
+      "titulo": "Tour Titicaca",
+      "descripcion": "Viaje por el lago más alto",
+      "tipo": "Cultural",
+      "costo": "200.00",
+      "categoria": 13,
+      "visible_publico": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
     }
   }
 ]

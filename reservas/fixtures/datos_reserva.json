@@ -1,0 +1,127 @@
+[
+  {
+    "model": "reservas.reserva",
+    "pk": 1001,
+    "fields": {
+      "usuario": 1,
+      "fecha_inicio": "2025-10-01T09:00:00Z",
+      "estado": "PENDIENTE",
+      "cupon": null,
+      "total": "850.00",
+      "moneda": "BOB",
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "reservas.reserva",
+    "pk": 1002,
+    "fields": {
+      "usuario": 1,
+      "fecha_inicio": "2025-11-05T14:30:00Z",
+      "estado": "PAGADA",
+      "cupon": null,
+      "total": "420.00",
+      "moneda": "BOB",
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "reservas.acompanante",
+    "pk": 501,
+    "fields": {
+      "documento": "LP-1234567",
+      "nombre": "María",
+      "apellido": "Fernández",
+      "fecha_nacimiento": "1995-04-10",
+      "nacionalidad": "Boliviana",
+      "email": "maria.fernandez@example.com",
+      "telefono": "+59170000001",
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "reservas.acompanante",
+    "pk": 502,
+    "fields": {
+      "documento": "SCZ-7654321",
+      "nombre": "Juan",
+      "apellido": "Rojas",
+      "fecha_nacimiento": "1992-09-01",
+      "nacionalidad": "Boliviana",
+      "email": "juan.rojas@example.com",
+      "telefono": "+59170000002",
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "reservas.reservaacompanante",
+    "pk": 9001,
+    "fields": {
+      "reserva": 1001,
+      "acompanante": 501,
+      "estado": "CONFIRMADO",
+      "es_titular": true
+    }
+  },
+  {
+    "model": "reservas.reservaacompanante",
+    "pk": 9002,
+    "fields": {
+      "reserva": 1001,
+      "acompanante": 502,
+      "estado": "CONFIRMADO",
+      "es_titular": false
+    }
+  },
+
+  {
+    "model": "reservas.reservaservicio",
+    "pk": 7001,
+    "fields": {
+      "reserva": 1001,
+      "servicio": 1,
+      "cantidad": 2,
+      "precio_unitario": "300.00",
+      "fecha_servicio": "2025-10-02T08:00:00Z"
+    }
+  },
+  {
+    "model": "reservas.reservaservicio",
+    "pk": 7002,
+    "fields": {
+      "reserva": 1001,
+      "servicio": 2,
+      "cantidad": 1,
+      "precio_unitario": "250.00",
+      "fecha_servicio": "2025-10-03T13:00:00Z"
+    }
+  },
+
+  {
+    "model": "reservas.reservaservicio",
+    "pk": 7003,
+    "fields": {
+      "reserva": 1002,
+      "servicio": 2,
+      "cantidad": 2,
+      "precio_unitario": "210.00",
+      "fecha_servicio": "2025-11-06T10:00:00Z"
+    }
+  },
+  {
+    "model": "reservas.reservaacompanante",
+    "pk": 9003,
+    "fields": {
+      "reserva": 1002,
+      "acompanante": 501,
+      "estado": "CONFIRMADO",
+      "es_titular": true
+    }
+  }
+]

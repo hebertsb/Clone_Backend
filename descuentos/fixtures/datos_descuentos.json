@@ -1,0 +1,83 @@
+[
+  {
+    "model": "descuentos.descuento",
+    "pk": 1,
+    "fields": {
+      "codigo": "DESC10POR",
+      "tipo": "PORCENTAJE",
+      "valor": "10.00",
+      "fecha_inicio": "2025-08-16T00:00:00Z",
+      "fecha_fin": "2025-10-15T00:00:00Z",
+      "estado": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "descuentos.descuento",
+    "pk": 2,
+    "fields": {
+      "codigo": "DESC100BS",
+      "tipo": "FIJO",
+      "valor": "100.00",
+      "fecha_inicio": null,
+      "fecha_fin": null,
+      "estado": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "descuentos.descuento",
+    "pk": 3,
+    "fields": {
+      "codigo": "EXPIRED15",
+      "tipo": "PORCENTAJE",
+      "valor": "15.00",
+      "fecha_inicio": "2025-08-16T00:00:00Z",
+      "fecha_fin": "2025-09-14T00:00:00Z",
+      "estado": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "descuentos.serviciodescuento",
+    "pk": 1001,
+    "fields": {
+      "servicio": 1,
+      "descuento": 1,
+      "prioridad": 1,
+      "exclusivo": true,
+      "estado": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "descuentos.serviciodescuento",
+    "pk": 1002,
+    "fields": {
+      "servicio": 1,
+      "descuento": 2,
+      "prioridad": 2,
+      "exclusivo": false,
+      "estado": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "descuentos.serviciodescuento",
+    "pk": 1003,
+    "fields": {
+      "servicio": 2,
+      "descuento": 3,
+      "prioridad": 1,
+      "exclusivo": true,
+      "estado": true,
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  }
+]

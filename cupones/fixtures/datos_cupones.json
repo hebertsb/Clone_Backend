@@ -1,0 +1,58 @@
+[
+  {
+    "model": "cupones.cupon",
+    "pk": 1,
+    "fields": {
+      "codigo": "DESCUENTO10",
+      "tipo": "PORCENTAJE",
+      "valor": "10.00",
+      "fecha_inicio": "2025-09-06T02:15:32.563611",
+      "fecha_fin": "2025-10-06T02:15:32.563630",
+      "estado": true,
+      "created_at": "2025-09-16T02:15:32.563634",
+      "updated_at": "2025-09-16T02:15:32.563636"
+    }
+  },
+  {
+    "model": "cupones.cupon",
+    "pk": 2,
+    "fields": {
+      "codigo": "FIJO50BOB",
+      "tipo": "FIJO",
+      "valor": "50.00",
+      "fecha_inicio": "2025-09-11T02:15:32.563639",
+      "fecha_fin": "2025-10-16T02:15:32.563642",
+      "estado": true,
+      "created_at": "2025-09-16T02:15:32.563644",
+      "updated_at": "2025-09-16T02:15:32.563646"
+    }
+  },
+  {
+    "model": "cupones.cupon",
+    "pk": 3,
+    "fields": {
+      "codigo": "BLACKFRIDAY",
+      "tipo": "PORCENTAJE",
+      "valor": "25.00",
+      "fecha_inicio": "2025-10-01T02:15:32.563649",
+      "fecha_fin": "2025-10-31T02:15:32.563652",
+      "estado": true,
+      "created_at": "2025-09-16T02:15:32.563654",
+      "updated_at": "2025-09-16T02:15:32.563656"
+    }
+  },
+  {
+    "model": "cupones.cupon",
+    "pk": 4,
+    "fields": {
+      "codigo": "INACTIVO20",
+      "tipo": "PORCENTAJE",
+      "valor": "20.00",
+      "fecha_inicio": "2025-07-18T02:15:32.563659",
+      "fecha_fin": "2025-08-17T02:15:32.563662",
+      "estado": false,
+      "created_at": "2025-09-16T02:15:32.563664",
+      "updated_at": "2025-09-16T02:15:32.563666"
+    }
+  }
+]

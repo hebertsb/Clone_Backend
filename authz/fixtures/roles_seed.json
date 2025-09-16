@@ -1,0 +1,29 @@
+[
+  {
+    "model": "authz.rol",
+    "pk": 1,
+    "fields": {
+      "nombre": "ADMIN",
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "authz.rol",
+    "pk": 2,
+    "fields": {
+      "nombre": "OPERADOR",
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "authz.rol",
+    "pk": 3,
+    "fields": {
+      "nombre": "CLIENTE",
+      "created_at": "2025-09-01T00:00:00Z",
+      "updated_at": "2025-09-01T00:00:00Z"
+    }
+  }
+]
