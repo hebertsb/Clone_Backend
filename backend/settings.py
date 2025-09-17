@@ -75,6 +75,7 @@ USE_TZ = True
 
 
 # # settings.py
+<<<<<<< HEAD
 #DATABASES = {
 #    'default': {
 #          'ENGINE': 'django.db.backends.postgresql',
