@@ -1,7 +1,7 @@
-
 from rest_framework import serializers
 from .models import Descuento, ServicioDescuento
 from django.utils import timezone
+import datetime
 
 class DescuentoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,12 +34,14 @@ class ServicioDescuentoSerializer(serializers.ModelSerializer):
                 d2 = sd.descuento
                 s2, e2 = d2.fecha_inicio, d2.fecha_fin
 
-                # Considera None como -∞ / +∞
-                s1_eff = s1 or timezone.datetime.min.replace(tzinfo=timezone.utc)
-                e1_eff = e1 or timezone.datetime.max.replace(tzinfo=timezone.utc)
-                s2_eff = s2 or timezone.datetime.min.replace(tzinfo=timezone.utc)
-                e2_eff = e2 or timezone.datetime.max.replace(tzinfo=timezone.utc)
+                # Considera None como -∞ / +∞ usando datetime
+                # Usamos datetime.datetime.min y datetime.datetime.max para manejar fechas extremas
+                s1_eff = s1 or datetime.datetime.min.replace(tzinfo=timezone.utc)  # Fecha mínima
+                e1_eff = e1 or datetime.datetime.max.replace(tzinfo=timezone.utc)  # Fecha máxima
+                s2_eff = s2 or datetime.datetime.min.replace(tzinfo=timezone.utc)  # Fecha mínima
+                e2_eff = e2 or datetime.datetime.max.replace(tzinfo=timezone.utc)  # Fecha máxima
 
+                # Validación de solapamiento de fechas
                 if s1_eff <= e2_eff and s2_eff <= e1_eff:
                     raise serializers.ValidationError(
                         "Ya existe un descuento EXCLUSIVO que se solapa en fechas para este servicio."
