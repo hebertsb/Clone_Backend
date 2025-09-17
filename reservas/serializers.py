@@ -151,7 +151,14 @@ class ReservaSerializer(serializers.ModelSerializer):
                 nombre = v.get('nombre')
                 apellido = v.get('apellido')
                 fecha_nacimiento = v.get('fecha_nacimiento')
-
+                # Normalizar fecha_nacimiento si viene como string
+                if isinstance(fecha_nacimiento, str):
+                    try:
+                         fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%Y-%m-%d").date()
+                    except ValueError:
+                        raise ValidationError({
+                            "acompanantes": f"Formato de fecha inválido para '{fecha_nacimiento}'. Usa YYYY-MM-DD."
+                    })
                 # Si nos dan documento, intentar obtener; si no existe y faltan campos requeridos, lanzar error
                 if documento:
                     acompanante_obj = AcompananteModel.objects.filter(documento=documento).first()
