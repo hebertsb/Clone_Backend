@@ -28,7 +28,8 @@ class Destino(TimeStampedModel):
     nombre = models.CharField(max_length=255)
     dias = models.IntegerField()
     descripcion = models.TextField(default="")
-
+    incluido = models.JSONField(default=list)  # Lista de elementos incluidos
+    calificacion = models.DecimalField(max_digits=2, decimal_places=1)
     def __str__(self):
         return self.nombre
 

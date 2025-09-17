@@ -2,36 +2,56 @@
   {
     "model": "catalogo.categoria",
     "pk": 9,
-    "fields": { "nombre": "Escapadas" }
+    "fields": {
+      "nombre": "Escapadas"
+    }
   },
   {
     "model": "catalogo.categoria",
     "pk": 10,
-    "fields": { "nombre": "Ecoturismo" }
+    "fields": {
+      "nombre": "Ecoturismo"
+    }
   },
   {
     "model": "catalogo.categoria",
     "pk": 11,
-    "fields": { "nombre": "Aventura" }
+    "fields": {
+      "nombre": "Aventura"
+    }
   },
-  { "model": "catalogo.categoria", "pk": 12, "fields": { "nombre": "Selva" } },
+  {
+    "model": "catalogo.categoria",
+    "pk": 12,
+    "fields": {
+      "nombre": "Selva"
+    }
+  },
   {
     "model": "catalogo.categoria",
     "pk": 13,
-    "fields": { "nombre": "Cultural" }
+    "fields": {
+      "nombre": "Cultural"
+    }
   },
   {
     "model": "catalogo.categoria",
     "pk": 14,
-    "fields": { "nombre": "Paquetes" }
+    "fields": {
+      "nombre": "Paquetes"
+    }
   },
-
   {
     "model": "catalogo.destino",
     "pk": 1,
     "fields": {
       "nombre": "La Paz",
       "dias": 3,
+      "incluido": [
+        "Guia",
+        "Hotel"
+      ],
+      "calificacion": "4.5", 
       "descripcion": "Ciudad capital con vistas espectaculares",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
@@ -42,7 +62,11 @@
     "pk": 2,
     "fields": {
       "nombre": "Santa Cruz",
-      "dias": 4,
+      "dias": 4,"incluido": [
+        "Guia",
+        "Hotel"
+      ],
+      "calificacion": "4.5",
       "descripcion": "Región tropical con naturaleza exuberante",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
@@ -53,13 +77,16 @@
     "pk": 3,
     "fields": {
       "nombre": "Sucre",
-      "dias": 2,
+      "dias": 2,"incluido": [
+        "Guia",
+        "Hotel"
+      ],
+      "calificacion": "4.5",
       "descripcion": "Ciudad histórica y cultural",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
   },
-
   {
     "model": "catalogo.itinerario",
     "pk": 1,
@@ -126,12 +153,15 @@
     "fields": {
       "dia": 2,
       "titulo": "Ecoturismo",
-      "actividades": ["Avistamiento de aves", "Ecoturismo", "Rafting en río"],
+      "actividades": [
+        "Avistamiento de aves",
+        "Ecoturismo",
+        "Rafting en río"
+      ],
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
     }
   },
-
   {
     "model": "catalogo.paquete",
     "pk": 1,
@@ -149,11 +179,16 @@
       "dificultad": "Alta",
       "categoria": 11,
       "imagenes": [
-        "https://example.com/image1.jpg",
-        "https://example.com/image2.jpg"
+        "https://static.wixstatic.com/media/55c14c_7fdd67fed43b48de99f31fe65053c641~mv2.jpg/v1/fill/w_250,h_375,al_c,q_90,enc_auto/55c14c_7fdd67fed43b48de99f31fe65053c641~mv2.jpg",
+        "https://static.wixstatic.com/media/55c14c_5c5ec2c6abaa4f38ab57a319fc096445~mv2.jpg/v1/fill/w_250,h_375,al_c,q_90,enc_auto/55c14c_5c5ec2c6abaa4f38ab57a319fc096445~mv2.jpg"
       ],
-      "destinos": [1],
-      "itinerario": [1, 2],
+      "destinos": [
+        1
+      ],
+      "itinerario": [
+        1,
+        2
+      ],
       "incluido": [
         "Tour por la ciudad",
         "Bungee jumping",
@@ -161,8 +196,15 @@
         "Caminata en la selva",
         "Cena privada con chef"
       ],
-      "no_incluido": ["Vuelos internacionales", "Seguro de viaje"],
-      "fechas_disponibles": ["2023-10-01", "2023-10-15", "2023-11-01"],
+      "no_incluido": [
+        "Vuelos internacionales",
+        "Seguro de viaje"
+      ],
+      "fechas_disponibles": [
+        "2023-10-01",
+        "2023-10-15",
+        "2023-11-01"
+      ],
       "descuento": "10.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
@@ -184,17 +226,29 @@
       "max_personas": 8,
       "dificultad": "Baja",
       "categoria": 12,
-      "imagenes": ["https://example.com/image3.jpg"],
-      "destinos": [2],
-      "itinerario": [3],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKz8RnQh8qTwqiSeISYPOTF2LfIL_XDBJRcA&s"
+      ],
+      "destinos": [
+        2
+      ],
+      "itinerario": [
+        3
+      ],
       "incluido": [
         "Retiros de yoga",
         "Masajes terapéuticos",
         "Tour gastronómico local",
         "Hotel 5 estrellas"
       ],
-      "no_incluido": ["Transporte al aeropuerto", "Bebidas alcohólicas"],
-      "fechas_disponibles": ["2023-09-20", "2023-10-05"],
+      "no_incluido": [
+        "Transporte al aeropuerto",
+        "Bebidas alcohólicas"
+      ],
+      "fechas_disponibles": [
+        "2023-09-20",
+        "2023-10-05"
+      ],
       "descuento": "5.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
@@ -216,17 +270,29 @@
       "max_personas": 12,
       "dificultad": "Media",
       "categoria": 13,
-      "imagenes": ["https://example.com/image4.jpg"],
-      "destinos": [3],
-      "itinerario": [4],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMV-_kDyCv5HA4ADRdvC7X8bgV9NYNeMdniQ&s"
+      ],
+      "destinos": [
+        3
+      ],
+      "itinerario": [
+        4
+      ],
       "incluido": [
         "Visita a museos de arte",
         "Espectáculo de danza folklórica",
         "Clase de cocina regional",
         "Transporte privado al aeropuerto"
       ],
-      "no_incluido": ["Almuerzos", "Souvenirs"],
-      "fechas_disponibles": ["2023-11-10", "2023-12-01"],
+      "no_incluido": [
+        "Almuerzos",
+        "Souvenirs"
+      ],
+      "fechas_disponibles": [
+        "2023-11-10",
+        "2023-12-01"
+      ],
       "descuento": "15.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
@@ -248,9 +314,17 @@
       "max_personas": 6,
       "dificultad": "Media-Alta",
       "categoria": 10,
-      "imagenes": ["https://example.com/image5.jpg"],
-      "destinos": [1, 2],
-      "itinerario": [2, 5],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_f7GPeewMEAdnDymaTi6vAksCe0BFPX1PzQ&s"
+      ],
+      "destinos": [
+        1,
+        2
+      ],
+      "itinerario": [
+        2,
+        5
+      ],
       "incluido": [
         "Avistamiento de aves",
         "Ecoturismo",
@@ -258,8 +332,14 @@
         "Caminata en la selva",
         "Tour en autobús turístico"
       ],
-      "no_incluido": ["Equipo personal", "Propinas"],
-      "fechas_disponibles": ["2023-10-20", "2023-11-15"],
+      "no_incluido": [
+        "Equipo personal",
+        "Propinas"
+      ],
+      "fechas_disponibles": [
+        "2023-10-20",
+        "2023-11-15"
+      ],
       "descuento": "8.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
@@ -281,17 +361,29 @@
       "max_personas": 4,
       "dificultad": "Baja",
       "categoria": 9,
-      "imagenes": ["https://example.com/image6.jpg"],
-      "destinos": [1],
-      "itinerario": [1],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwYLgPb8lnzGfMPqTYtQKaVqQmnzCDlzbfNw&s"
+      ],
+      "destinos": [
+        1
+      ],
+      "itinerario": [
+        1
+      ],
       "incluido": [
         "Crucero de lujo",
         "Cena privada con chef",
         "Transporte privado al aeropuerto",
         "Hotel 5 estrellas"
       ],
-      "no_incluido": ["Actividades opcionales", "Bebidas premium"],
-      "fechas_disponibles": ["2023-12-01", "2024-01-15"],
+      "no_incluido": [
+        "Actividades opcionales",
+        "Bebidas premium"
+      ],
+      "fechas_disponibles": [
+        "2023-12-01",
+        "2024-01-15"
+      ],
       "descuento": "20.00",
       "created_at": "2023-09-14T00:00:00Z",
       "updated_at": "2023-09-14T00:00:00Z"
@@ -313,17 +405,30 @@
       "max_personas": 12,
       "dificultad": "Baja",
       "categoria": 14,
-      "imagenes": ["https://example.com/titicaca1.jpg"],
-      "destinos": [1],
-      "itinerario": [1, 5],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-KEjCaB6djlKVlYAqsxsQRoFA1W2_dasDrg&s"
+      ],
+      "destinos": [
+        1
+      ],
+      "itinerario": [
+        1,
+        5
+      ],
       "incluido": [
         "Transporte terrestre",
         "Navegación en barco",
         "Alojamiento",
         "Guía local"
       ],
-      "no_incluido": ["Comidas especiales", "Gastos personales"],
-      "fechas_disponibles": ["2025-10-10", "2025-11-01"],
+      "no_incluido": [
+        "Comidas especiales",
+        "Gastos personales"
+      ],
+      "fechas_disponibles": [
+        "2025-10-10",
+        "2025-11-01"
+      ],
       "descuento": "7.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
@@ -345,12 +450,29 @@
       "max_personas": 10,
       "dificultad": "Media",
       "categoria": 12,
-      "imagenes": ["https://example.com/selva1.jpg"],
-      "destinos": [2],
-      "itinerario": [2, 5],
-      "incluido": ["Traslados", "Guía naturalista", "Alojamiento ecológico"],
-      "no_incluido": ["Vuelos", "Seguro"],
-      "fechas_disponibles": ["2025-10-20", "2025-11-10"],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSueQamKql5B-vUrRpQmgGxk2VVy_DYbpOE_A&s"
+      ],
+      "destinos": [
+        2
+      ],
+      "itinerario": [
+        2,
+        5
+      ],
+      "incluido": [
+        "Traslados",
+        "Guía naturalista",
+        "Alojamiento ecológico"
+      ],
+      "no_incluido": [
+        "Vuelos",
+        "Seguro"
+      ],
+      "fechas_disponibles": [
+        "2025-10-20",
+        "2025-11-10"
+      ],
       "descuento": "10.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
@@ -372,12 +494,27 @@
       "max_personas": 8,
       "dificultad": "Baja",
       "categoria": 13,
-      "imagenes": ["https://example.com/gastronomia1.jpg"],
-      "destinos": [3],
-      "itinerario": [4],
-      "incluido": ["Clases de cocina", "Degustaciones", "Alojamiento"],
-      "no_incluido": ["Bebidas alcohólicas"],
-      "fechas_disponibles": ["2025-09-25", "2025-10-15"],
+      "imagenes": [
+        "https://static.wixstatic.com/media/651e92_6c5d7c6254bd4feb95d989e2a180bcc4~mv2.jpg/v1/fit/w_431,h_284,q_90,enc_avif,quality_auto/651e92_6c5d7c6254bd4feb95d989e2a180bcc4~mv2.jpg"
+      ],
+      "destinos": [
+        3
+      ],
+      "itinerario": [
+        4
+      ],
+      "incluido": [
+        "Clases de cocina",
+        "Degustaciones",
+        "Alojamiento"
+      ],
+      "no_incluido": [
+        "Bebidas alcohólicas"
+      ],
+      "fechas_disponibles": [
+        "2025-09-25",
+        "2025-10-15"
+      ],
       "descuento": "5.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
@@ -399,16 +536,30 @@
       "max_personas": 12,
       "dificultad": "Media-Alta",
       "categoria": 11,
-      "imagenes": ["https://example.com/andes1.jpg"],
-      "destinos": [1],
-      "itinerario": [2, 3, 5],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSyfM39HhIHj-xxHhQz1N_0KDuqKYHwoWC5g&s"
+      ],
+      "destinos": [
+        1
+      ],
+      "itinerario": [
+        2,
+        3,
+        5
+      ],
       "incluido": [
         "Guía de montaña",
         "Equipo básico",
         "Alojamiento en refugios"
       ],
-      "no_incluido": ["Seguro de altura", "Comidas extras"],
-      "fechas_disponibles": ["2025-10-01", "2025-11-01"],
+      "no_incluido": [
+        "Seguro de altura",
+        "Comidas extras"
+      ],
+      "fechas_disponibles": [
+        "2025-10-01",
+        "2025-11-01"
+      ],
       "descuento": "12.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
@@ -430,16 +581,27 @@
       "max_personas": 6,
       "dificultad": "Baja",
       "categoria": 9,
-      "imagenes": ["https://example.com/urban1.jpg"],
-      "destinos": [1],
-      "itinerario": [1],
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOALu3TRnlpuOC11IKCuTZY3fkAx8cTazQfw&s"
+      ],
+      "destinos": [
+        1
+      ],
+      "itinerario": [
+        1
+      ],
       "incluido": [
         "Tour privado",
         "Cena de bienvenida",
         "Alojamiento boutique"
       ],
-      "no_incluido": ["Traslados al aeropuerto"],
-      "fechas_disponibles": ["2025-09-20", "2025-10-10"],
+      "no_incluido": [
+        "Traslados al aeropuerto"
+      ],
+      "fechas_disponibles": [
+        "2025-09-20",
+        "2025-10-10"
+      ],
       "descuento": "6.00",
       "created_at": "2025-09-14T00:00:00Z",
       "updated_at": "2025-09-14T00:00:00Z"
