@@ -79,7 +79,8 @@ def solicitar_recuperacion_password(request):
         return Response({"detail": "Si el email existe, se enviará un enlace de recuperación."}, status=200)
     # Generar token único y guardar en cache (puedes usar modelo real si prefieres)
     token = get_random_string(48)
-    cache.set(f"resetpw:{token}", usuario.id, timeout=60*60)   # type: ignore
+    cache_key = f"resetpw:{email}:{token}"
+    cache.set(cache_key, usuario.id, timeout=60*60)   # type: ignore
     # Enviar email SOLO con el código/token, visualmente atractivo
     html_message = f"""
     <div style='font-family: Arial, sans-serif; color: #222; background: #f7f7fa; padding: 32px;'>
@@ -104,48 +105,41 @@ def solicitar_recuperacion_password(request):
     )
     return Response({"detail": "Si el email existe, se enviará un enlace de recuperación."}, status=200)
 
-# Endpoint para restablecer contraseña
+
+# Endpoint seguro para restablecer contraseña (sin autenticación, valida email+token)
 @api_view(["POST"])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([AllowAny])
 @extend_schema(
-    summary="Cambiar contraseña con código de seguridad",
-    description="Permite a un usuario autenticado cambiar su contraseña usando el código recibido por email.",
+    summary="Restablecer contraseña con token",
+    description="Permite a un usuario restablecer su contraseña usando el token recibido por email.",
     request=inline_serializer(
         name="ResetPasswordRequest",
         fields={
+            "email": drf_serializers.EmailField(),
             "token": drf_serializers.CharField(),
-            "password_actual": drf_serializers.CharField(min_length=8),
-            "password_nueva": drf_serializers.CharField(min_length=8),
-            "password_nueva_confirm": drf_serializers.CharField(min_length=8),
+            "password": drf_serializers.CharField(min_length=8),
         },
     ),
-    responses={200: OpenApiResponse(description="Contraseña cambiada correctamente")},
+    responses={200: OpenApiResponse(description="Contraseña restablecida correctamente")},
 )
 def resetear_password(request):
+    email = request.data.get("email")
     token = request.data.get("token")
-    password_actual = request.data.get("password_actual")
-    password_nueva = request.data.get("password_nueva")
-    password_nueva_confirm = request.data.get("password_nueva_confirm")
-    if not token or not password_actual or not password_nueva or not password_nueva_confirm:
+    password = request.data.get("password")
+    if not email or not token or not password:
         return Response({"detail": "Faltan campos"}, status=400)
-    if password_nueva != password_nueva_confirm:
-        return Response({"detail": "Las contraseñas nuevas no coinciden"}, status=400)
-    usuario_id = cache.get(f"resetpw:{token}")
+    cache_key = f"resetpw:{email}:{token}"
+    usuario_id = cache.get(cache_key)
     if not usuario_id:
-        return Response({"detail": "Código inválido o expirado"}, status=400)
+        return Response({"detail": "Token inválido o expirado"}, status=400)
     try:
-        usuario = Usuario.objects.get(id=usuario_id)
+        usuario = Usuario.objects.get(id=usuario_id, email=email)
     except Usuario.DoesNotExist:
         return Response({"detail": "Usuario no encontrado"}, status=404)
-    # Validar contraseña actual
-    if not request.user.check_password(password_actual):
-        return Response({"detail": "La contraseña actual es incorrecta"}, status=400)
-    # Cambiar contraseña
-    request.user.set_password(password_nueva)
-    request.user.save()
-    # Eliminar token
-    cache.delete(f"resetpw:{token}")
-    return Response({"detail": "Contraseña cambiada correctamente."}, status=200)
+    usuario.set_password(password)
+    usuario.save()
+    cache.delete(cache_key)
+    return Response({"detail": "Contraseña restablecida correctamente."}, status=200)
 
 class RolViewSet(viewsets.ModelViewSet):
     queryset = Rol.objects.all()

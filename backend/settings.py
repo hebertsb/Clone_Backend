@@ -77,12 +77,8 @@ USE_TZ = True
 # settings.py
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'xDFPNklpQdkPEFRYjdMmdDGDKmzmgGff',
-        'HOST': 'switchyard.proxy.rlwy.net',
-        'PORT': '21139',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
