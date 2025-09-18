@@ -5,6 +5,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import dj_database_url
+import socket
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,6 +15,19 @@ DEBUG = os.getenv("DEBUG", "1") in ["1", "True", "true"]
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000").split(",")
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
+
+# Permite acceso tanto desde localhost/web como desde la red local para desarrollo
+try:
+    local_ip = socket.gethostbyname(socket.gethostname())
+except Exception:
+    local_ip = None
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
+if local_ip and local_ip not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(local_ip)
 
 INSTALLED_APPS = [
     "django.contrib.admin","django.contrib.auth","django.contrib.contenttypes",
