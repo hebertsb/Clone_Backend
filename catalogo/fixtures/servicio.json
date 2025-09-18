@@ -1,0 +1,191 @@
+[
+  {
+    "model": "catalogo.servicio",
+    "pk": 1,
+    "fields": {
+      "titulo": "Salar de Uyuni",
+      "descripcion": "Excursión de 3 días por el salar",
+      "tipo": "Turismo",
+      "costo": "250.00",
+      "categoria": 9,
+      "dias": 3,
+      "descripcion_servicio": "Un emocionante tour por el Salar de Uyuni.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 5,
+      "visible_publico": true,
+      "imagenes": [
+        "https://images.pexels.com/photos/17507607/pexels-photo-17507607.jpeg"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 2,
+    "fields": {
+      "titulo": "Isla del Sol",
+      "descripcion": "Viaje por el Lago Titicaca",
+      "tipo": "Cultural",
+      "costo": "180.00",
+      "categoria": 13,
+      "dias": 2,
+      "descripcion_servicio": "Recorrido cultural por la Isla del Sol.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 4,
+      "visible_publico": true,
+      "imagenes": [
+        "https://images.pexels.com/photos/17895232/pexels-photo-17895232.jpeg"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 3,
+    "fields": {
+      "titulo": "Tiwanaku",
+      "descripcion": "Visita arqueológica en Tiwanaku",
+      "tipo": "Cultural",
+      "costo": "90.00",
+      "categoria": 13,
+      "dias": 1,
+      "descripcion_servicio": "Explora la cultura ancestral de Tiwanaku.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 5,
+      "visible_publico": false,
+      "imagenes": [
+        "https://images.pexels.com/photos/19032101/pexels-photo-19032101.jpeg"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 4,
+    "fields": {
+      "titulo": "Cristo de la Concordia",
+      "descripcion": "Visita al Cristo de la Concordia en Cochabamba",
+      "tipo": "Turismo",
+      "costo": "60.00",
+      "categoria": 9,
+      "dias": 1,
+      "descripcion_servicio": "Sube al Cristo de la Concordia y disfruta de vistas impresionantes.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 3,
+      "visible_publico": true,
+      "imagenes": [
+        "https://images.pexels.com/photos/15013675/pexels-photo-15013675.jpeg"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 5,
+    "fields": {
+      "titulo": "Laguna Colorada",
+      "descripcion": "Tour por la Reserva Nacional Eduardo Avaroa",
+      "tipo": "Ecoturismo",
+      "costo": "210.00",
+      "categoria": 10,
+      "dias": 2,
+      "descripcion_servicio": "Explora la belleza natural de la Laguna Colorada.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 5,
+      "visible_publico": true,
+      "imagenes": [
+        "https://images.pexels.com/photos/7124359/pexels-photo-7124359.jpeg"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 6,
+    "fields": {
+      "titulo": "Camino de la Muerte",
+      "descripcion": "Bajada en bicicleta por el famoso Camino de la Muerte",
+      "tipo": "Aventura",
+      "costo": "150.00",
+      "categoria": 11,
+      "dias": 1,
+      "descripcion_servicio": "Vive una experiencia única bajando en bicicleta por el famoso Camino de la Muerte.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 4,
+      "visible_publico": false,
+      "imagenes": [
+        "https://media.istockphoto.com/id/499536590/es/foto/viajes-de-aventura-en-carretera-de-monta%C3%B1a-en-descenso-de-la-muerte.jpg?s=612x612&w=0&k=20&c=Eo6jQdoe5n2HkXaW6z40WcWxSjRV3ODLjQqL--gYSTM="
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 7,
+    "fields": {
+      "titulo": "Coroico",
+      "descripcion": "Visita al municipio de Coroico en los Yungas",
+      "tipo": "Turismo",
+      "costo": "120.00",
+      "categoria": 9,
+      "dias": 2,
+      "descripcion_servicio": "Disfruta de las vistas panorámicas de los Yungas en el municipio de Coroico.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 4,
+      "visible_publico": true,
+      "imagenes": [
+        "https://media.istockphoto.com/id/859293544/es/foto/niebla-de-la-ma%C3%B1ana-sobre-el-camino-de-la-muerte-en-los-yungas-de-bolivia.jpg?s=612x612&w=0&k=20&c=WXPBBZhAKcy-cqtf-X8OsaaD1a0taHEB6mGRuu9E_MA="
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 8,
+    "fields": {
+      "titulo": "Samaipata",
+      "descripcion": "Recorrido cultural y natural en Samaipata",
+      "tipo": "Ecoturismo",
+      "costo": "170.00",
+      "categoria": 10,
+      "dias": 3,
+      "descripcion_servicio": "Explora las ruinas de Samaipata y disfruta de la naturaleza en este hermoso lugar.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 5,
+      "visible_publico": true,
+      "imagenes": [
+        "https://images.pexels.com/photos/11396013/pexels-photo-11396013.jpeg"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.servicio",
+    "pk": 9,
+    "fields": {
+      "titulo": "Parque Nacional Madidi",
+      "descripcion": "Visita al Parque Nacional Madidi en la región amazónica",
+      "tipo": "Ecoturismo",
+      "costo": "300.00",
+      "categoria": 10,
+      "dias": 4,
+      "descripcion_servicio": "Adéntrate en el Parque Nacional Madidi y disfruta de la biodiversidad amazónica.",
+      "incluido": ["Guía", "Transporte", "Hotel"],
+      "calificacion": 5,
+      "visible_publico": true,
+      "imagenes": [
+        "https://media.istockphoto.com/id/2010206051/es/foto/el-parque-nacional-madidi-en-bolivia.jpg?s=612x612&w=0&k=20&c=uKx8nc5iqYQp_ygMQMqkum7l8UDyjj2RAXfcA3FVOk8="
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  }
+]

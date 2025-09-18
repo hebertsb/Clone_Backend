@@ -1,0 +1,175 @@
+[
+  {
+    "model": "catalogo.paquete",
+    "pk": 1,
+    "fields": {
+      "nombre": "Paquete Aventura Extrema La Paz",
+      "ubicacion": "La Paz, Bolivia",
+      "descripcion_corta": "Aventura extrema en la ciudad más alta del mundo",
+      "descripcion_completa": "Experimenta la adrenalina en La Paz con bungee jumping, escalada y caminatas en la selva.",
+      "calificacion": "4.5",
+      "numero_reseñas": 120,
+      "precio": "450.00",
+      "precio_original": "500.00",
+      "duracion": "3 días",
+      "max_personas": 10,
+      "dificultad": "Alta",
+      "categoria": 11,
+      "imagenes": [
+        "https://static.wixstatic.com/media/55c14c_7fdd67fed43b48de99f31fe65053c641~mv2.jpg/v1/fill/w_250,h_375,al_c,q_90,enc_auto/55c14c_7fdd67fed43b48de99f31fe65053c641~mv2.jpg",
+        "https://static.wixstatic.com/media/55c14c_5c5ec2c6abaa4f38ab57a319fc096445~mv2.jpg/v1/fill/w_250,h_375,al_c,q_90,enc_auto/55c14c_5c5ec2c6abaa4f38ab57a319fc096445~mv2.jpg"
+      ],
+      "servicios": [1],
+      "itinerario": [1, 2],
+      "incluido": [
+        "Tour por la ciudad",
+        "Bungee jumping",
+        "Escalada en roca",
+        "Caminata en la selva",
+        "Cena privada con chef"
+      ],
+      "no_incluido": ["Vuelos internacionales", "Seguro de viaje"],
+      "fechas_disponibles": ["2023-10-01", "2023-10-15", "2023-11-01"],
+      "descuento": "10.00",
+      "created_at": "2023-09-14T00:00:00Z",
+      "updated_at": "2023-09-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.paquete",
+    "pk": 2,
+    "fields": {
+      "nombre": "Paquete Relax Tropical Santa Cruz",
+      "ubicacion": "Santa Cruz, Bolivia",
+      "descripcion_corta": "Relajación en el trópico boliviano",
+      "descripcion_completa": "Disfruta de retiros de yoga, masajes y experiencias gastronómicas en Santa Cruz.",
+      "calificacion": "4.8",
+      "numero_reseñas": 85,
+      "precio": "350.00",
+      "precio_original": "400.00",
+      "duracion": "4 días",
+      "max_personas": 8,
+      "dificultad": "Baja",
+      "categoria": 12,
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKz8RnQh8qTwqiSeISYPOTF2LfIL_XDBJRcA&s"
+      ],
+      "servicios": [2],
+      "itinerario": [3],
+      "incluido": [
+        "Retiros de yoga",
+        "Masajes terapéuticos",
+        "Tour gastronómico local",
+        "Hotel 5 estrellas"
+      ],
+      "no_incluido": ["Transporte al aeropuerto", "Bebidas alcohólicas"],
+      "fechas_disponibles": ["2023-09-20", "2023-10-05"],
+      "descuento": "5.00",
+      "created_at": "2023-09-14T00:00:00Z",
+      "updated_at": "2023-09-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.paquete",
+    "pk": 3,
+    "fields": {
+      "nombre": "Paquete Cultural Histórico Sucre",
+      "ubicacion": "Sucre, Bolivia",
+      "descripcion_corta": "Sumérgete en la historia y cultura de Sucre",
+      "descripcion_completa": "Visita museos, disfruta de danzas folklóricas y aprende cocina regional en Sucre.",
+      "calificacion": "4.7",
+      "numero_reseñas": 95,
+      "precio": "250.00",
+      "precio_original": "300.00",
+      "duracion": "2 días",
+      "max_personas": 12,
+      "dificultad": "Media",
+      "categoria": 13,
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMV-_kDyCv5HA4ADRdvC7X8bgV9NYNeMdniQ&s"
+      ],
+      "servicios": [3],
+      "itinerario": [3],
+      "incluido": [
+        "Visita a museos de arte",
+        "Espectáculo de danza folklórica",
+        "Clase de cocina regional",
+        "Transporte privado al aeropuerto"
+      ],
+      "no_incluido": ["Almuerzos", "Souvenirs"],
+      "fechas_disponibles": ["2023-11-10", "2023-12-01"],
+      "descuento": "15.00",
+      "created_at": "2023-09-14T00:00:00Z",
+      "updated_at": "2023-09-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.paquete",
+    "pk": 4,
+    "fields": {
+      "nombre": "Paquete Ecológico Aventura Combinado",
+      "ubicacion": "La Paz y Santa Cruz, Bolivia",
+      "descripcion_corta": "Ecoturismo y aventura en Bolivia",
+      "descripcion_completa": "Combina avistamiento de aves, rafting y caminatas en un viaje inolvidable.",
+      "calificacion": "4.6",
+      "numero_reseñas": 70,
+      "precio": "550.00",
+      "precio_original": "600.00",
+      "duracion": "5 días",
+      "max_personas": 6,
+      "dificultad": "Media-Alta",
+      "categoria": 10,
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_f7GPeewMEAdnDymaTi6vAksCe0BFPX1PzQ&s"
+      ],
+      "servicios": [1, 2],
+      "itinerario": [2, 3],
+      "incluido": [
+        "Avistamiento de aves",
+        "Ecoturismo",
+        "Rafting en río",
+        "Caminata en la selva",
+        "Tour en autobús turístico"
+      ],
+      "no_incluido": ["Equipo personal", "Propinas"],
+      "fechas_disponibles": ["2023-10-20", "2023-11-15"],
+      "descuento": "8.00",
+      "created_at": "2023-09-14T00:00:00Z",
+      "updated_at": "2023-09-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.paquete",
+    "pk": 5,
+    "fields": {
+      "nombre": "Paquete de Lujo Ejecutivo",
+      "ubicacion": "La Paz, Bolivia",
+      "descripcion_corta": "Experiencia de lujo en La Paz",
+      "descripcion_completa": "Disfruta de cruceros de lujo, cenas privadas y transporte exclusivo.",
+      "calificacion": "5.0",
+      "numero_reseñas": 50,
+      "precio": "1200.00",
+      "precio_original": "1300.00",
+      "duracion": "3 días",
+      "max_personas": 4,
+      "dificultad": "Baja",
+      "categoria": 9,
+      "imagenes": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwYLgPb8lnzGfMPqTYtQKaVqQmnzCDlzbfNw&s"
+      ],
+      "servicios": [1],
+      "itinerario": [1],
+      "incluido": [
+        "Crucero de lujo",
+        "Cena privada con chef",
+        "Transporte privado al aeropuerto",
+        "Hotel 5 estrellas"
+      ],
+      "no_incluido": ["Actividades opcionales", "Bebidas premium"],
+      "fechas_disponibles": ["2023-12-01", "2024-01-15"],
+      "descuento": "20.00",
+      "created_at": "2023-09-14T00:00:00Z",
+      "updated_at": "2023-09-14T00:00:00Z"
+    }
+  }
+]

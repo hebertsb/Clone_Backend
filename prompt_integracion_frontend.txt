@@ -1,61 +1,80 @@
-# Asignación de roles en el registro de usuario
+# 🔒 Gestión y verificación de roles para usuario SOPORTE
 
-1. **¿Qué rol asigna el backend por defecto al registrar un usuario?**
-	- El backend asigna automáticamente el rol CLIENTE a todos los nuevos usuarios registrados.
-	- El endpoint de registro (por ejemplo, /api/auth/register/ o /api/usuarios/) asigna el rol CLIENTE por defecto, no el rol con ID 3 necesariamente, sino el que tenga el nombre "CLIENTE" en la tabla de roles.
-	- No hay lógica para asignar otro rol (como ADMIN) por defecto al registrar usuarios desde el frontend.
+## 1. Verificar rol actual del usuario "soporte@autonoma.edu.bo"
 
-2. **¿El backend permite que el frontend envíe el campo rol o roles en el registro?**
-	- El backend ignora cualquier campo de rol o roles que llegue desde el frontend en el registro.
-	- Siempre asigna el rol CLIENTE, aunque el formulario envíe otro valor.
+- Consulta SQL para usuario:
+  ```sql
+  SELECT * FROM authz_usuario WHERE email = 'soporte@autonoma.edu.bo';
+  ```
+- Consulta SQL para roles asociados:
+  ```sql
+  SELECT * FROM authz_usuario_roles WHERE usuario_id = (SELECT id FROM authz_usuario WHERE email = 'soporte@autonoma.edu.bo');
+  ```
 
-3. **Código relevante del endpoint de registro:**
-```python
-def create(self, validated_data):
-	 validated_data.pop('password_confirm')
-	 password = validated_data.pop('password')
-	 user = Usuario(**validated_data)
-	 user.set_password(password)
-	 user.save()
-	 from .models import Rol
-	 rol_cliente, _ = Rol.objects.get_or_create(nombre="CLIENTE")
-	 user.roles.add(rol_cliente)
-	 return user
-```
-	- Aquí se fuerza la asignación del rol CLIENTE al usuario recién creado.
+## 2. Verificar todos los roles disponibles
 
-4. **¿Qué datos está recibiendo realmente el backend en la petición de registro?**
-	- El backend recibe los campos definidos en el serializer (nombres, apellidos, email, password, etc.).
-	- Si el frontend envía un campo roles o rol, el serializer lo ignora y no lo usa.
-	- Puedes agregar un print(request.data) en la vista de registro para ver exactamente qué llega.
+- Consulta SQL:
+  ```sql
+  SELECT * FROM authz_rol ORDER BY id;
+  ```
+- Según los seeds, deberían ser:
+  - ID 1 = ADMIN
+  - ID 2 = OPERADOR
+  - ID 3 = CLIENTE
+  - ID 4 = SOPORTE
 
-5. **¿Cómo se relacionan los roles con el usuario en la base de datos?**
-	- El modelo Usuario tiene una relación ManyToMany con la tabla Rol:
-	  ```python
-	  roles = models.ManyToManyField(Rol, related_name="usuarios", blank=True)
-	  ```
-	- No hay valor por defecto en el modelo, pero el serializer de registro siempre asigna CLIENTE.
+## 3. Verificar endpoint de listado de usuarios
 
-**Extra:**
-- Ejemplo de JSON recibido en registro:
-```json
-{
-  "nombres": "Juan",
-  "apellidos": "Pérez",
-  "email": "juan.perez@email.com",
-  "password": "MiPassword123!",
-  "password_confirm": "MiPassword123!",
-  "telefono": "+591 70123456"
-}
-```
-- Ejemplo de usuario creado en la base de datos tras registro:
-```json
-{
-  "id": 5,
-  "nombres": "Juan",
-  "apellidos": "Pérez",
-  "email": "juan.perez@email.com",
-  "telefono": "+591 70123456",
-  "roles": [ID_DEL_ROL_CLIENTE]
-}
-```
+- Endpoint: `GET /api/usuarios/`
+- Respuesta esperada para usuario soporte:
+  ```json
+  {
+    "id": 4,
+    "email": "soporte@autonoma.edu.bo",
+    "nombres": "Soporte",
+    "apellidos": "Sistema",
+    "roles": [4],
+    "estado": "ACTIVO"
+    // ...otros campos
+  }
+  ```
+
+## 4. Asignar/cambiar rol SOPORTE
+
+- Endpoint disponible:
+  ```
+  POST /api/usuarios/{id}/asignar-rol/
+  Body: { "rol": "SOPORTE" }
+  ```
+- Alternativa SQL:
+  ```sql
+  UPDATE authz_usuario_roles SET rol_id = 4 WHERE usuario_id = 4;
+  ```
+
+## 5. Estructura de respuesta de usuario
+
+- Respuesta esperada:
+  ```json
+  {
+    "id": 4,
+    "email": "soporte@autonoma.edu.bo",
+    "nombres": "Soporte",
+    "apellidos": "Sistema",
+    "roles": [4],
+    "estado": "ACTIVO"
+    // ...otros campos
+  }
+  ```
+- El campo `roles` es un array de IDs. Si tiene múltiples roles, aparecerán todos los IDs.
+
+---
+
+## Resumen de acción recomendada
+
+1. Verifica el rol actual del usuario con las consultas SQL.
+2. Si no tiene el rol SOPORTE (ID 4), asígnalo usando el endpoint `/api/usuarios/{id}/asignar-rol/` o por SQL.
+3. Confirma con el endpoint de listado que el usuario tiene el rol correcto.
+
+---
+
+¿Necesitas ejemplos de cómo hacer estas peticiones desde el frontend o scripts para automatizarlo?

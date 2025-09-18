@@ -1,0 +1,18 @@
+[
+  {
+    "model": "authz.usuario",
+    "pk": 1,
+    "fields": {
+      "nombres": "Soporte",
+      "apellidos": "Sistema",
+      "email": "soporte@autonoma.edu.bo",
+  "password": "pbkdf2_sha256$1000000$1CYoyGgCmVfpcF5ZJFJnyC$YJggJC+kIb4W/eCOCUxz4QtWeynCW61YkRdyFG90zVM=",
+      "telefono": "70000004",
+      "estado": "ACTIVO",
+      "is_active": true,
+      "is_staff": false,
+      "date_joined": "2025-09-17T12:00:00Z",
+      "roles": [4]
+    }
+  }
+]
