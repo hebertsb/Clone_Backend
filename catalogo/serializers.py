@@ -31,3 +31,5 @@ class PaqueteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paquete
         fields = "__all__"
+
+    max_personas = serializers.IntegerField(read_only=True)
