@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from authz.views import RolViewSet, UsuarioViewSet
-from catalogo.views import CategoriaViewSet, ServicioViewSet, DestinoViewSet, ItinerarioViewSet, PaqueteViewSet
+from catalogo.views import CategoriaViewSet, ServicioViewSet, ItinerarioViewSet, PaqueteViewSet
 from reservas.views import ReservaViewSet, AcompananteViewSet, ReservaAcompananteViewSet
 # from cupones.views import CuponViewSet  # Commented out until CuponViewSet is implemented
 from descuentos.views import DescuentoViewSet, ServicioDescuentoViewSet, precio_servicio
@@ -12,8 +12,7 @@ router = DefaultRouter()
 router.register(r"roles", RolViewSet)
 router.register(r"usuarios", UsuarioViewSet)
 router.register(r'categorias', CategoriaViewSet)
-router.register(r'servicios', ServicioViewSet)
-router.register(r'destinos', DestinoViewSet)
+router.register(r'servicios', ServicioViewSet)  
 router.register(r'itinerarios', ItinerarioViewSet)
 router.register(r'paquetes', PaqueteViewSet)
 router.register(r"reservas", ReservaViewSet)
