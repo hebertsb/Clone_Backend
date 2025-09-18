@@ -72,26 +72,31 @@ class ReservaSerializer(serializers.ModelSerializer):
         fields = [
             "id", "usuario", "fecha_inicio", "estado", "cupon", "total", "moneda", "detalles", "acompanantes", "created_at", "updated_at"
         ]
-        read_only_fields = ["estado", "usuario"]
+    read_only_fields = ["usuario"]
 
     def create(self, validated_data):
         from .models import ReservaServicio, ReservaAcompanante, Acompanante as AcompananteModel
+
+        import sys
+        print('DEBUG validated_data:', validated_data, file=sys.stderr)
+        request = self.context.get('request')
+        if request is not None:
+            print('DEBUG request.data:', request.data, file=sys.stderr)
 
         detalles = validated_data.pop('detalles', [])
         # Prefer validated nested data; when nested serializer is read-only for 'acompanante'
         # the client's nested object may not appear in validated_data. Fall back to raw
         # request data to accept companion objects sent by the frontend.
-        if 'acompanantes' in validated_data:
-            acompanantes = validated_data.pop('acompanantes', [])
-        else:
-            request = self.context.get('request')
-            acompanantes = []
-            if request is not None:
-                acompanantes = request.data.get('acompanantes', [])
+        # SIEMPRE tomar los acompañantes desde request.data para asegurar que llegan completos
+        acompanantes = []
+        if request is not None:
+            acompanantes = request.data.get('acompanantes', [])
 
         # Calcular precio real desde catalogo y total
         suma = Decimal('0')
         detalles_para_crear = []
+        validated_data.pop('acompanantes', None)
+        acompanantes = request.data.get('acompanantes', []) if request is not None else []  # Tomar acompañantes desde request.data
         for d in detalles:
             servicio_val = d.get('servicio')
             cantidad = int(d.get('cantidad', 1))
@@ -106,8 +111,20 @@ class ReservaSerializer(serializers.ModelSerializer):
                 except Servicio.DoesNotExist:
                     raise ValidationError({"detalles": f"Servicio con id {servicio_val} no encontrado."})
 
-            # Ayuda a los analizadores estáticos a inferir el tipo
-            servicio_obj = cast(Servicio, servicio_obj)
+            # VALIDACIÓN DE CUPO USANDO max_personas DEL PAQUETE
+            paquete = getattr(servicio_obj, 'paquete', None)
+            if paquete is not None:
+                max_personas = getattr(paquete, 'max_personas', None)
+                if max_personas is not None:
+                    # Contar personas ya reservadas para ese paquete
+                    from reservas.models import ReservaServicio
+                    reservas_servicio = ReservaServicio.objects.filter(servicio=servicio_obj)
+                    total_personas_reservadas = sum([rs.cantidad for rs in reservas_servicio])
+                    personas_nueva_reserva = cantidad
+                    if total_personas_reservadas + personas_nueva_reserva > max_personas:
+                        raise ValidationError({
+                            'detalles': f"No hay cupo suficiente en el paquete '{paquete.nombre}'. Cupo máximo: {max_personas}, reservados: {total_personas_reservadas}"
+                        })
 
             precio_real = servicio_obj.costo
             subtotal = Decimal(str(precio_real)) * cantidad
@@ -133,6 +150,7 @@ class ReservaSerializer(serializers.ModelSerializer):
         # El formato aceptado por acompanantes será una lista de objetos con la forma:
         # { "acompanante": {..datos..} | <id>, "estado": "CONFIRMADO", "es_titular": true }
         titular_count = 0
+
         for rv in acompanantes:
             # rv puede ser un dict que contenga 'acompanante' o directamente los campos del acompanante
             v = rv.get('acompanante') if isinstance(rv, dict) and 'acompanante' in rv else rv
@@ -184,9 +202,46 @@ class ReservaSerializer(serializers.ModelSerializer):
                             email=v.get('email'),
                             telefono=v.get('telefono'),
                         )
+
+        if acompanantes:
+            for rv in acompanantes:
+                # Permitir ambos formatos: plano y anidado
+                datos = None
+                estado = None
+                es_titular = False
+                if isinstance(rv, dict):
+                    if 'acompanante' in rv and isinstance(rv['acompanante'], dict):
+                        datos = rv['acompanante']
+                        estado = rv.get('estado')
+                        es_titular = rv.get('es_titular', False)
+                    else:
+                        datos = rv
+                        estado = rv.get('estado')
+                        es_titular = rv.get('es_titular', False)
+
                 else:
-                    # Sin documento, requerimos los campos primarios para crear acompañante
+                    datos = rv
+
+                acompanante_obj = None
+                # datos puede ser instancia de Acompanante, un pk (int) o dict con datos
+                if isinstance(datos, AcompananteModel):
+                    acompanante_obj = datos
+                elif isinstance(datos, int):
+                    acompanante_obj = AcompananteModel.objects.get(pk=datos)
+                elif isinstance(datos, dict):
+                    # Si el dict tiene los campos de persona, usarlos siempre
+                    documento = datos.get('documento', '')
+                    nombre = datos.get('nombre', '')
+                    apellido = datos.get('apellido', '')
+                    fecha_nacimiento = datos.get('fecha_nacimiento', None)
+                    nacionalidad = datos.get('nacionalidad')
+                    email = datos.get('email')
+                    telefono = datos.get('telefono')
+
+                    # Validar todos los campos obligatorios antes de crear
                     missing = []
+                    if not documento:
+                        missing.append('documento')
                     if not nombre:
                         missing.append('nombre')
                     if not apellido:
@@ -194,27 +249,30 @@ class ReservaSerializer(serializers.ModelSerializer):
                     if not fecha_nacimiento:
                         missing.append('fecha_nacimiento')
                     if missing:
-                        raise ValidationError({'acompanantes': f"Faltan campos para crear acompañante: {', '.join(missing)}"})
-                    acompanante_obj = AcompananteModel.objects.create(
-                        documento=v.get('documento', ''),
-                        nombre=nombre,
-                        apellido=apellido,
-                        fecha_nacimiento=fecha_nacimiento,
-                        nacionalidad=v.get('nacionalidad'),
-                        email=v.get('email'),
-                        telefono=v.get('telefono'),
-                    )
-            else:
-                # no se reconoce el formato, saltar
-                continue
+                        raise ValidationError({
+                            'acompanantes': f"Faltan campos obligatorios para crear acompañante: {', '.join(missing)}"
+                        })
 
-            if es_titular:
-                titular_count += 1
+                    # Si nos dan documento, intentar obtener; si no existe, crear
+                    acompanante_obj = AcompananteModel.objects.filter(documento=documento).first()
+                    if not acompanante_obj:
+                        acompanante_obj = AcompananteModel.objects.create(
+                            documento=documento,
+                            nombre=nombre,
+                            apellido=apellido,
+                            fecha_nacimiento=fecha_nacimiento,
+                            nacionalidad=nacionalidad,
+                            email=email,
+                            telefono=telefono,
+                        )
 
-            ReservaAcompanante.objects.create(reserva=reserva, acompanante=acompanante_obj, estado=estado or 'CONFIRMADO', es_titular=es_titular)
+                if es_titular:
+                    titular_count += 1
 
-        if titular_count > 1:
-            raise ValidationError({"acompanantes": "Solo puede haber un titular por reserva."})
+                ReservaAcompanante.objects.create(reserva=reserva, acompanante=acompanante_obj, estado=estado or 'CONFIRMADO', es_titular=es_titular)
+
+            if titular_count > 1:
+                raise ValidationError({"acompanantes": "Solo puede haber un titular por reserva."})
 
         return reserva
 

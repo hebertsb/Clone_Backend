@@ -15,11 +15,13 @@ class Command(BaseCommand):
         fixtures = [
             'roles_seed.json',
             'datos_usuarios.json',
-            'paquetes_sample.json',
+            'categoria.json',
+            'servicio.json',
+            'paquete.json',
+            'itinerario.json',
             'datos_cupones.json',
             'datos_descuentos.json',
             'datos_reserva.json'
-            # agrega todos los archivos que tengas en /fixtures/
         ]
 
         for fixture in fixtures:

@@ -1,11 +1,5 @@
-
 from rest_framework import serializers
-from .models import Categoria, Servicio, Destino, Itinerario, Paquete
-
-class ServicioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Servicio
-        fields = "__all__"
+from .models import Categoria, Servicio, Itinerario, Paquete
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -13,10 +7,12 @@ class CategoriaSerializer(serializers.ModelSerializer):
         model = Categoria
         fields = "__all__"
 
-class DestinoSerializer(serializers.ModelSerializer):
+
+class ServicioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Destino
+        model = Servicio
         fields = "__all__"
+
 
 class ItinerarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,9 +21,12 @@ class ItinerarioSerializer(serializers.ModelSerializer):
 
 
 class PaqueteSerializer(serializers.ModelSerializer):
-    categoria = CategoriaSerializer(read_only=True)
-    destinos = DestinoSerializer(many=True, read_only=True)
-    itinerario = ItinerarioSerializer(many=True, read_only=True)
+    itinerario = ItinerarioSerializer(
+        many=True, read_only=True
+    )  # Asegúrate de incluir el serializer del itinerario
+
     class Meta:
         model = Paquete
         fields = "__all__"
+
+    max_personas = serializers.IntegerField(read_only=True)

@@ -8,11 +8,17 @@ from .models import Reserva, Acompanante, ReservaAcompanante
 from .serializers import ReservaSerializer, AcompananteSerializer, ReservaAcompananteSerializer
 
 class ReservaViewSet(viewsets.ModelViewSet):
-    queryset = Reserva.objects.all().select_related("usuario", "cupon").prefetch_related("detalles")
-    # incluir acompañantes en prefetech para evitar N+1 cuando se muestran reservas completas
     queryset = Reserva.objects.all().select_related("usuario", "cupon").prefetch_related("detalles", "acompanantes__acompanante")
     serializer_class = ReservaSerializer
     permission_classes = [permissions.IsAuthenticated]
+    # Habilitar filtro por estado usando django-filter
+    from django_filters.rest_framework import DjangoFilterBackend
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["estado"]
+
+    # Estados válidos para edición:
+    # "PENDIENTE", "CONFIRMADA", "PAGADA", "CANCELADA", "COMPLETADA"
+    # Puedes editar el campo estado a cualquiera de estos valores usando PATCH o PUT.
 
     def get_user_roles(self):
         user = self.request.user
