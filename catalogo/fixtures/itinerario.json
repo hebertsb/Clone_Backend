@@ -1,0 +1,47 @@
+[
+  {
+    "model": "catalogo.itinerario",
+    "pk": 1,
+    "fields": {
+      "dia": 1,
+      "titulo": "Llegada y tour por la ciudad",
+      "actividades": [
+        "Recepción en aeropuerto",
+        "Tour por la ciudad",
+        "Cena privada con chef"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.itinerario",
+    "pk": 2,
+    "fields": {
+      "dia": 2,
+      "titulo": "Aventura extrema",
+      "actividades": [
+        "Bungee jumping",
+        "Escalada en roca",
+        "Caminata en la selva"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  },
+  {
+    "model": "catalogo.itinerario",
+    "pk": 3,
+    "fields": {
+      "dia": 1,
+      "titulo": "Exploración cultural",
+      "actividades": [
+        "Visita a museos de arte",
+        "Espectáculo de danza folklórica",
+        "Clase de cocina regional"
+      ],
+      "created_at": "2025-09-15T00:00:00Z",
+      "updated_at": "2025-09-15T00:00:00Z"
+    }
+  }
+]
