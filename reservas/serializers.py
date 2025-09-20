@@ -1,12 +1,14 @@
 
 from rest_framework import serializers
-from .models import Reserva, ReservaServicio, Acompanante, ReservaAcompanante
+from .models import Reserva, ReservaServicio, Acompanante, ReservaAcompanante, HistorialReprogramacion, ReglasReprogramacion, ConfiguracionGlobalReprogramacion
 from authz.models import Usuario
 from catalogo.models import Servicio
 from decimal import Decimal
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import Field
 from typing import cast
+from django.utils import timezone
+from datetime import timedelta
 
 class ReservaServicioSerializer(serializers.ModelSerializer):
     tipo = serializers.CharField(source="servicio.tipo", read_only=True)
@@ -425,3 +427,490 @@ class ReservaSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+# Nuevos serializadores para reprogramaciones
+
+class HistorialReprogramacionSerializer(serializers.ModelSerializer):
+    reprogramado_por = UsuarioReservaSerializer(read_only=True)
+    
+    class Meta:
+        model = HistorialReprogramacion
+        fields = [
+            'id', 'fecha_anterior', 'fecha_nueva', 'motivo', 
+            'reprogramado_por', 'notificacion_enviada', 'created_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'reprogramado_por', 'notificacion_enviada']
+
+
+class ReprogramacionReservaSerializer(serializers.Serializer):
+    """Serializador específico para solicitudes de reprogramación"""
+    nueva_fecha = serializers.DateTimeField(
+        help_text="Nueva fecha y hora para la reserva"
+    )
+    motivo = serializers.CharField(
+        max_length=500, 
+        required=False, 
+        allow_blank=True,
+        help_text="Motivo de la reprogramación (opcional)"
+    )
+    
+    def validate_nueva_fecha(self, value):
+        """Validaciones para la nueva fecha usando reglas dinámicas"""
+        ahora = timezone.now()
+        
+        # No se puede reprogramar a una fecha pasada
+        if value <= ahora:
+            raise ValidationError("No se puede reprogramar a una fecha pasada.")
+        
+        # Obtener usuario y roles del contexto
+        request = self.context.get('request')
+        roles = []
+        if request and hasattr(request, 'user'):
+            user = request.user
+            if isinstance(user, Usuario) and hasattr(user, 'roles'):
+                roles = list(user.roles.values_list('nombre', flat=True))
+        
+        # Aplicar reglas dinámicas de tiempo mínimo
+        tiempo_minimo = None
+        for rol in roles + ['ALL']:
+            regla = ReglasReprogramacion.obtener_regla_activa('TIEMPO_MINIMO', rol)
+            if regla:
+                tiempo_minimo = regla.obtener_valor()
+                break
+        
+        # Si no hay regla específica, usar 24 horas por defecto
+        if tiempo_minimo is None:
+            tiempo_minimo = 24
+        
+        if isinstance(tiempo_minimo, (int, float)):
+            tiempo_requerido = ahora + timedelta(hours=tiempo_minimo)
+            if value <= tiempo_requerido:
+                regla_activa = ReglasReprogramacion.obtener_regla_activa('TIEMPO_MINIMO', roles[0] if roles else 'ALL')
+                mensaje = (regla_activa.mensaje_error if regla_activa and regla_activa.mensaje_error 
+                          else f"La reprogramación debe hacerse con al menos {tiempo_minimo} horas de anticipación.")
+                raise ValidationError(mensaje)
+        
+        # Aplicar reglas dinámicas de tiempo máximo
+        tiempo_maximo = None
+        for rol in roles + ['ALL']:
+            regla = ReglasReprogramacion.obtener_regla_activa('TIEMPO_MAXIMO', rol)
+            if regla:
+                tiempo_maximo = regla.obtener_valor()
+                break
+        
+        # Si no hay regla específica, usar 1 año por defecto
+        if tiempo_maximo is None:
+            tiempo_maximo = 365 * 24  # 1 año en horas
+        
+        if isinstance(tiempo_maximo, (int, float)):
+            tiempo_limite = ahora + timedelta(hours=tiempo_maximo)
+            if value > tiempo_limite:
+                regla_activa = ReglasReprogramacion.obtener_regla_activa('TIEMPO_MAXIMO', roles[0] if roles else 'ALL')
+                mensaje = (regla_activa.mensaje_error if regla_activa and regla_activa.mensaje_error 
+                          else f"No se puede reprogramar más de {tiempo_maximo/24:.0f} días en el futuro.")
+                raise ValidationError(mensaje)
+        
+        # Verificar días blackout
+        for rol in roles + ['ALL']:
+            regla = ReglasReprogramacion.obtener_regla_activa('DIAS_BLACKOUT', rol)
+            if regla:
+                try:
+                    dias_blackout = regla.obtener_valor()
+                    if isinstance(dias_blackout, list):
+                        dia_semana = value.weekday()  # 0=lunes, 6=domingo
+                        nombres_dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+                        if nombres_dias[dia_semana] in [d.lower() for d in dias_blackout]:
+                            mensaje = (regla.mensaje_error if regla.mensaje_error 
+                                     else f"No se puede reprogramar en {nombres_dias[dia_semana]}.")
+                            raise ValidationError(mensaje)
+                except:
+                    pass
+        
+        # Verificar horas blackout
+        for rol in roles + ['ALL']:
+            regla = ReglasReprogramacion.obtener_regla_activa('HORAS_BLACKOUT', rol)
+            if regla:
+                try:
+                    horas_blackout = regla.obtener_valor()
+                    if isinstance(horas_blackout, list):
+                        hora_nueva = value.hour
+                        if hora_nueva in horas_blackout:
+                            mensaje = (regla.mensaje_error if regla.mensaje_error 
+                                     else f"No se puede reprogramar a las {hora_nueva}:00 horas.")
+                            raise ValidationError(mensaje)
+                except:
+                    pass
+        
+        return value
+    
+    def validate(self, attrs):
+        """Validaciones adicionales considerando el contexto y reglas dinámicas"""
+        request = self.context.get('request')
+        reserva = self.context.get('reserva')
+        
+        if reserva:
+            # Validar que la reserva se pueda reprogramar
+            if reserva.estado in ['CANCELADA']:
+                raise ValidationError("No se puede reprogramar una reserva cancelada.")
+            
+            # Obtener roles del usuario
+            roles = []
+            if request and hasattr(request, 'user'):
+                user = request.user
+                if isinstance(user, Usuario) and hasattr(user, 'roles'):
+                    roles = list(user.roles.values_list('nombre', flat=True))
+            
+            # Aplicar límite dinámico de reprogramaciones
+            limite_reprogramaciones = None
+            for rol in roles + ['ALL']:
+                regla = ReglasReprogramacion.obtener_regla_activa('LIMITE_REPROGRAMACIONES', rol)
+                if regla:
+                    limite_reprogramaciones = regla.obtener_valor()
+                    break
+            
+            # Si no hay regla específica, usar 3 por defecto
+            if limite_reprogramaciones is None:
+                limite_reprogramaciones = 3
+            
+            if isinstance(limite_reprogramaciones, (int, float)):
+                if reserva.numero_reprogramaciones >= int(limite_reprogramaciones):
+                    regla_activa = ReglasReprogramacion.obtener_regla_activa('LIMITE_REPROGRAMACIONES', roles[0] if roles else 'ALL')
+                    mensaje = (regla_activa.mensaje_error if regla_activa and regla_activa.mensaje_error 
+                              else f"Esta reserva ya ha sido reprogramada el máximo número de veces permitido ({limite_reprogramaciones}).")
+                    raise ValidationError(mensaje)
+            
+            # Validar que no sea la misma fecha
+            nueva_fecha = attrs.get('nueva_fecha')
+            if nueva_fecha and reserva.fecha_inicio:
+                if nueva_fecha.date() == reserva.fecha_inicio.date():
+                    raise ValidationError("La nueva fecha debe ser diferente a la fecha actual.")
+            
+            # Verificar servicios restringidos
+            for rol in roles + ['ALL']:
+                regla = ReglasReprogramacion.obtener_regla_activa('SERVICIOS_RESTRINGIDOS', rol)
+                if regla:
+                    try:
+                        servicios_restringidos = regla.obtener_valor()
+                        if isinstance(servicios_restringidos, list):
+                            servicios_reserva = list(reserva.detalles.values_list('servicio__titulo', flat=True))
+                            for servicio in servicios_reserva:
+                                if servicio in servicios_restringidos:
+                                    mensaje = (regla.mensaje_error if regla.mensaje_error 
+                                             else f"El servicio '{servicio}' tiene restricciones para reprogramar.")
+                                    raise ValidationError(mensaje)
+                    except:
+                        pass
+        
+        return attrs
+
+
+class ReservaConHistorialSerializer(ReservaSerializer):
+    """Extiende ReservaSerializer para incluir información de reprogramaciones"""
+    historial_reprogramaciones = HistorialReprogramacionSerializer(many=True, read_only=True)
+    puede_reprogramar = serializers.SerializerMethodField()
+    
+    class Meta(ReservaSerializer.Meta):
+        fields = ReservaSerializer.Meta.fields + [
+            'fecha_original', 'fecha_reprogramacion', 'motivo_reprogramacion', 
+            'numero_reprogramaciones', 'reprogramado_por', 'historial_reprogramaciones',
+            'puede_reprogramar'
+        ]
+        read_only_fields = getattr(ReservaSerializer.Meta, 'read_only_fields', []) + [
+            'fecha_original', 'fecha_reprogramacion', 'numero_reprogramaciones', 
+            'reprogramado_por', 'historial_reprogramaciones'
+        ]
+    
+    def get_puede_reprogramar(self, obj):
+        """Determina si la reserva puede ser reprogramada"""
+        if obj.estado in ['CANCELADA']:
+            return False
+        
+        if obj.numero_reprogramaciones >= 3:
+            return False
+        
+        # Verificar que la fecha de inicio no sea muy próxima (menos de 24 horas)
+        ahora = timezone.now()
+        if obj.fecha_inicio <= ahora + timedelta(hours=24):
+            return False
+        
+        return True
+
+
+# ============================================================================
+# SERIALIZADORES PARA REGLAS DE REPROGRAMACIÓN
+# ============================================================================
+
+class ReglasReprogramacionSerializer(serializers.ModelSerializer):
+    """Serializador para gestionar reglas de reprogramación."""
+    
+    valor_calculado = serializers.SerializerMethodField()
+    es_aplicable = serializers.SerializerMethodField()
+    
+    class Meta:
+        from .models import ReglasReprogramacion
+        model = ReglasReprogramacion
+        fields = [
+            'id', 'nombre', 'tipo_regla', 'aplicable_a',
+            'valor_numerico', 'valor_decimal', 'valor_texto', 'valor_booleano',
+            'fecha_inicio_vigencia', 'fecha_fin_vigencia', 'activa', 'prioridad',
+            'mensaje_error', 'condiciones_extras', 'valor_calculado', 'es_aplicable',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['created_at', 'updated_at']
+    
+    def get_valor_calculado(self, obj):
+        """Retorna el valor interpretado de la regla."""
+        return obj.obtener_valor()
+    
+    def get_es_aplicable(self, obj):
+        """Verifica si la regla es aplicable al usuario actual."""
+        request = self.context.get('request')
+        if not request or not hasattr(request, 'user'):
+            return True
+        
+        user = request.user
+        if isinstance(user, Usuario) and hasattr(user, 'roles'):
+            roles = list(user.roles.values_list('nombre', flat=True))
+            for rol in roles:
+                if obj.es_aplicable_a_rol(rol):
+                    return True
+        return False
+    
+    def validate(self, attrs):
+        """Validación completa de reglas."""
+        # Validar que al menos un valor esté definido
+        valores = [
+            attrs.get('valor_numerico'),
+            attrs.get('valor_decimal'), 
+            attrs.get('valor_texto'),
+            attrs.get('valor_booleano')
+        ]
+        
+        if all(v is None or v == '' for v in valores):
+            raise ValidationError("Debe definir al menos un valor para la regla.")
+        
+        # Validar fechas de vigencia
+        fecha_inicio = attrs.get('fecha_inicio_vigencia')
+        fecha_fin = attrs.get('fecha_fin_vigencia')
+        
+        if fecha_inicio and fecha_fin and fecha_inicio >= fecha_fin:
+            raise ValidationError({
+                'fecha_fin_vigencia': 'La fecha de fin debe ser posterior a la fecha de inicio.'
+            })
+        
+        # Validaciones específicas por tipo de regla
+        tipo_regla = attrs.get('tipo_regla')
+        
+        if tipo_regla in ['TIEMPO_MINIMO', 'TIEMPO_MAXIMO'] and not attrs.get('valor_numerico'):
+            raise ValidationError({
+                'valor_numerico': f'El tipo de regla {tipo_regla} requiere un valor numérico (horas).'
+            })
+        
+        if tipo_regla in ['LIMITE_REPROGRAMACIONES', 'LIMITE_DIARIO', 'LIMITE_SEMANAL', 'LIMITE_MENSUAL']:
+            valor = attrs.get('valor_numerico')
+            if not valor or valor < 0:
+                raise ValidationError({
+                    'valor_numerico': f'El tipo de regla {tipo_regla} requiere un valor numérico positivo.'
+                })
+        
+        if tipo_regla == 'DESCUENTO_PENALIZACION':
+            valor = attrs.get('valor_decimal')
+            if valor is None or valor < 0 or valor > 100:
+                raise ValidationError({
+                    'valor_decimal': 'La penalización debe ser un porcentaje entre 0 y 100.'
+                })
+        
+        if tipo_regla in ['DIAS_BLACKOUT', 'HORAS_BLACKOUT', 'SERVICIOS_RESTRINGIDOS']:
+            if not attrs.get('valor_texto'):
+                raise ValidationError({
+                    'valor_texto': f'El tipo de regla {tipo_regla} requiere valores en formato texto/JSON.'
+                })
+        
+        return attrs
+
+
+class ConfiguracionGlobalSerializer(serializers.ModelSerializer):
+    """Serializador para configuraciones globales."""
+    
+    valor_tipado = serializers.SerializerMethodField()
+    
+    class Meta:
+        from .models import ConfiguracionGlobalReprogramacion
+        model = ConfiguracionGlobalReprogramacion
+        fields = [
+            'id', 'clave', 'valor', 'descripcion', 'tipo_valor',
+            'activa', 'valor_tipado', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['created_at', 'updated_at']
+    
+    def get_valor_tipado(self, obj):
+        """Retorna el valor convertido al tipo correcto."""
+        try:
+            return obj.obtener_valor_tipado()
+        except:
+            return obj.valor
+    
+    def validate_valor(self, value):
+        """Valida que el valor sea compatible con el tipo especificado."""
+        initial_data = getattr(self, 'initial_data', {})
+        tipo_valor = initial_data.get('tipo_valor', 'STRING') if initial_data else 'STRING'
+        
+        if tipo_valor == 'INTEGER':
+            try:
+                int(value)
+            except ValueError:
+                raise ValidationError("El valor debe ser un número entero válido.")
+        
+        elif tipo_valor == 'DECIMAL':
+            try:
+                float(value)
+            except ValueError:
+                raise ValidationError("El valor debe ser un número decimal válido.")
+        
+        elif tipo_valor == 'BOOLEAN':
+            if value.lower() not in ['true', 'false', '1', '0', 'yes', 'no', 'si']:
+                raise ValidationError("El valor debe ser un booleano válido (true/false, 1/0, etc.).")
+        
+        elif tipo_valor == 'JSON':
+            import json
+            try:
+                json.loads(value)
+            except json.JSONDecodeError:
+                raise ValidationError("El valor debe ser un JSON válido.")
+        
+        return value
+
+
+class ValidadorReglasSerializer(serializers.Serializer):
+    """Serializador para validar si una reprogramación cumple con las reglas."""
+    
+    reserva_id = serializers.IntegerField()
+    nueva_fecha = serializers.DateTimeField()
+    motivo = serializers.CharField(required=False, allow_blank=True)
+    
+    def validate(self, attrs):
+        """Aplica todas las reglas activas y retorna errores si las viola."""
+        from .models import Reserva, ReglasReprogramacion
+        
+        reserva_id = attrs.get('reserva_id')
+        nueva_fecha = attrs.get('nueva_fecha')
+        
+        # Obtener la reserva
+        try:
+            reserva = Reserva.objects.get(pk=reserva_id)
+        except Reserva.DoesNotExist:
+            raise ValidationError({'reserva_id': 'Reserva no encontrada.'})
+        
+        # Obtener usuario y roles
+        request = self.context.get('request')
+        if not request or not hasattr(request, 'user'):
+            raise ValidationError('Usuario no autenticado.')
+        
+        user = request.user
+        roles = []
+        if isinstance(user, Usuario) and hasattr(user, 'roles'):
+            roles = list(user.roles.values_list('nombre', flat=True))
+        
+        errores = []
+        
+        # Aplicar cada tipo de regla
+        for rol in roles + ['ALL']:
+            # Tiempo mínimo de anticipación
+            regla = ReglasReprogramacion.obtener_regla_activa('TIEMPO_MINIMO', rol)
+            if regla:
+                horas_minimas = regla.obtener_valor()
+                if horas_minimas is not None and isinstance(horas_minimas, (int, float)):
+                    tiempo_anticipacion = nueva_fecha - timezone.now()
+                    if tiempo_anticipacion.total_seconds() < (horas_minimas * 3600):
+                        errores.append(regla.mensaje_error or 
+                                     f"Debe reprogramar con al menos {horas_minimas} horas de anticipación.")
+            
+            # Tiempo máximo para reprogramar
+            regla = ReglasReprogramacion.obtener_regla_activa('TIEMPO_MAXIMO', rol)
+            if regla:
+                horas_maximas = regla.obtener_valor()
+                if horas_maximas is not None and isinstance(horas_maximas, (int, float)):
+                    tiempo_hasta_fecha = nueva_fecha - timezone.now()
+                    if tiempo_hasta_fecha.total_seconds() > (horas_maximas * 3600):
+                        errores.append(regla.mensaje_error or 
+                                     f"No puede reprogramar con más de {horas_maximas} horas de anticipación.")
+            
+            # Límite de reprogramaciones
+            regla = ReglasReprogramacion.obtener_regla_activa('LIMITE_REPROGRAMACIONES', rol)
+            if regla:
+                limite = regla.obtener_valor()
+                if limite is not None and isinstance(limite, (int, float)):
+                    if reserva.numero_reprogramaciones >= int(limite):
+                        errores.append(regla.mensaje_error or 
+                                     f"Ha alcanzado el límite de {limite} reprogramaciones para esta reserva.")
+            
+            # Días blackout
+            regla = ReglasReprogramacion.obtener_regla_activa('DIAS_BLACKOUT', rol)
+            if regla:
+                try:
+                    import json
+                    dias_blackout = regla.obtener_valor()
+                    if isinstance(dias_blackout, list):
+                        dia_semana = nueva_fecha.weekday()  # 0=lunes, 6=domingo
+                        nombres_dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+                        if nombres_dias[dia_semana] in [d.lower() for d in dias_blackout]:
+                            errores.append(regla.mensaje_error or 
+                                         f"No se puede reprogramar en {nombres_dias[dia_semana]}.")
+                except:
+                    pass
+            
+            # Horas blackout
+            regla = ReglasReprogramacion.obtener_regla_activa('HORAS_BLACKOUT', rol)
+            if regla:
+                try:
+                    horas_blackout = regla.obtener_valor()
+                    if isinstance(horas_blackout, list):
+                        hora_nueva = nueva_fecha.hour
+                        if hora_nueva in horas_blackout:
+                            errores.append(regla.mensaje_error or 
+                                         f"No se puede reprogramar a las {hora_nueva}:00 horas.")
+                except:
+                    pass
+        
+        if errores:
+            raise ValidationError({'reglas_violadas': errores})
+        
+        return attrs
+
+
+class ResumenReglasSerializer(serializers.Serializer):
+    """Serializador para mostrar un resumen de reglas aplicables a un usuario."""
+    
+    def to_representation(self, instance):
+        """Genera resumen de reglas activas."""
+        from .models import ReglasReprogramacion
+        
+        request = self.context.get('request')
+        roles = ['ALL']
+        
+        if request and hasattr(request, 'user'):
+            user = request.user
+            if isinstance(user, Usuario) and hasattr(user, 'roles'):
+                roles.extend(list(user.roles.values_list('nombre', flat=True)))
+        
+        resumen = {}
+        
+        for tipo_regla, descripcion in ReglasReprogramacion.TIPOS_REGLA:
+            for rol in roles:
+                regla = ReglasReprogramacion.obtener_regla_activa(tipo_regla, rol)
+                if regla and tipo_regla not in resumen:
+                    resumen[tipo_regla] = {
+                        'descripcion': descripcion,
+                        'valor': regla.obtener_valor(),
+                        'aplicable_a': regla.aplicable_a,
+                        'mensaje': regla.mensaje_error or f"Regla: {descripcion}",
+                        'activa_desde': regla.fecha_inicio_vigencia,
+                        'activa_hasta': regla.fecha_fin_vigencia,
+                    }
+        
+        return {
+            'reglas_activas': resumen,
+            'total_reglas': len(resumen),
+            'roles_usuario': roles[1:] if len(roles) > 1 else ['No autenticado']
+        }

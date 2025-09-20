@@ -55,3 +55,11 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos} <{self.email}>"
+    
+    def get_full_name(self):
+        """Retorna el nombre completo del usuario"""
+        return f"{self.nombres} {self.apellidos}".strip()
+    
+    def get_short_name(self):
+        """Retorna el primer nombre"""
+        return self.nombres

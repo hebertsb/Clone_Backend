@@ -184,3 +184,15 @@ __pycache__/
 *.pyc
 .env
 .env.*
+
+# Documentación y archivos de prueba (agregados por el usuario)
+# Carpeta de documentación
+docs/
+
+# Archivos de prueba Python
+test_*.py
+prueba_*.py
+*test*.py
+
+# Archivos Markdown
+*.md

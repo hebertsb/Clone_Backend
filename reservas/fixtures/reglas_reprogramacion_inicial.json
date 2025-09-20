@@ -1,0 +1,116 @@
+[
+  {
+    "model": "reservas.reglasreprogramacion",
+    "pk": 1,
+    "fields": {
+      "nombre": "Tiempo mínimo estándar",
+      "tipo_regla": "TIEMPO_MINIMO",
+      "aplicable_a": "ALL",
+      "valor_numerico": 24,
+      "valor_decimal": null,
+      "valor_texto": null,
+      "valor_booleano": null,
+      "fecha_inicio_vigencia": null,
+      "fecha_fin_vigencia": null,
+      "activa": true,
+      "prioridad": 1,
+      "mensaje_error": "Debe reprogramar con al menos 24 horas de anticipación.",
+      "condiciones_extras": {}
+    }
+  },
+  {
+    "model": "reservas.reglasreprogramacion",
+    "pk": 2,
+    "fields": {
+      "nombre": "Límite reprogramaciones clientes",
+      "tipo_regla": "LIMITE_REPROGRAMACIONES",
+      "aplicable_a": "CLIENTE",
+      "valor_numerico": 3,
+      "valor_decimal": null,
+      "valor_texto": null,
+      "valor_booleano": null,
+      "fecha_inicio_vigencia": null,
+      "fecha_fin_vigencia": null,
+      "activa": true,
+      "prioridad": 1,
+      "mensaje_error": "Ha alcanzado el límite máximo de 3 reprogramaciones por reserva.",
+      "condiciones_extras": {}
+    }
+  },
+  {
+    "model": "reservas.reglasreprogramacion",
+    "pk": 3,
+    "fields": {
+      "nombre": "Tiempo mínimo administradores",
+      "tipo_regla": "TIEMPO_MINIMO",
+      "aplicable_a": "ADMIN",
+      "valor_numerico": 12,
+      "valor_decimal": null,
+      "valor_texto": null,
+      "valor_booleano": null,
+      "fecha_inicio_vigencia": null,
+      "fecha_fin_vigencia": null,
+      "activa": true,
+      "prioridad": 1,
+      "mensaje_error": "Los administradores pueden reprogramar con 12 horas de anticipación.",
+      "condiciones_extras": {}
+    }
+  },
+  {
+    "model": "reservas.reglasreprogramacion",
+    "pk": 4,
+    "fields": {
+      "nombre": "Sin reprogramaciones domingos",
+      "tipo_regla": "DIAS_BLACKOUT",
+      "aplicable_a": "ALL",
+      "valor_numerico": null,
+      "valor_decimal": null,
+      "valor_texto": "[\"domingo\"]",
+      "valor_booleano": null,
+      "fecha_inicio_vigencia": null,
+      "fecha_fin_vigencia": null,
+      "activa": true,
+      "prioridad": 2,
+      "mensaje_error": "No se permite reprogramar para días domingo.",
+      "condiciones_extras": {}
+    }
+  },
+  {
+    "model": "reservas.reglasreprogramacion",
+    "pk": 5,
+    "fields": {
+      "nombre": "Límite diario clientes",
+      "tipo_regla": "LIMITE_DIARIO",
+      "aplicable_a": "CLIENTE",
+      "valor_numerico": 3,
+      "valor_decimal": null,
+      "valor_texto": null,
+      "valor_booleano": null,
+      "fecha_inicio_vigencia": null,
+      "fecha_fin_vigencia": null,
+      "activa": true,
+      "prioridad": 1,
+      "mensaje_error": "No puede hacer más de 3 reprogramaciones por día.",
+      "condiciones_extras": {}
+    }
+  },
+  {
+    "model": "reservas.reglasreprogramacion",
+    "pk": 6,
+    "fields": {
+      "nombre": "Capacidad máxima por fecha",
+      "tipo_regla": "CAPACIDAD_MAXIMA",
+      "aplicable_a": "ALL",
+      "valor_numerico": 50,
+      "valor_decimal": null,
+      "valor_texto": null,
+      "valor_booleano": null,
+      "fecha_inicio_vigencia": null,
+      "fecha_fin_vigencia": null,
+      "activa": true,
+      "prioridad": 1,
+      "mensaje_error": "La fecha ha alcanzado la capacidad máxima de reservas.",
+      "condiciones_extras": {}
+    }
+  }
+]

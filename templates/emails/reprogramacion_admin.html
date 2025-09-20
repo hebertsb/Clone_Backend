@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificación de Reprogramación - Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+        .alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .info-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .info-box h4 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .date-comparison {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .date-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .date-row:last-child {
+            border-bottom: none;
+        }
+        .priority {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .services-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+        }
+        .services-table th,
+        .services-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+        .services-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .actions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚠️ Reprogramación de Reserva</h1>
+        <p>Se ha reprogramado la reserva #{{ reserva.id }}</p>
+    </div>
+    
+    <div class="content">
+        <div class="alert">
+            <strong>Acción Requerida:</strong> Por favor revisa y confirma la disponibilidad para la nueva fecha programada.
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-box">
+                <h4>👤 Información del Cliente</h4>
+                <p><strong>Nombre:</strong> {{ usuario.nombres }} {{ usuario.apellidos }}</p>
+                <p><strong>Email:</strong> {{ usuario.email }}</p>
+                <p><strong>Teléfono:</strong> {{ usuario.telefono|default:"No proporcionado" }}</p>
+            </div>
+            
+            <div class="info-box">
+                <h4>📋 Detalles de la Reserva</h4>
+                <p><strong>ID:</strong> #{{ reserva.id }}</p>
+                <p><strong>Estado:</strong> {{ reserva.estado }}</p>
+                <p><strong>Total:</strong> {{ reserva.total }} {{ reserva.moneda }}</p>
+                <p><strong>Reprogramaciones:</strong> {{ reserva.numero_reprogramaciones }}</p>
+            </div>
+        </div>
+        
+        <div class="date-comparison">
+            <h4>📅 Cambio de Fechas</h4>
+            <div class="date-row">
+                <strong>Fecha Anterior:</strong>
+                <span>{{ fecha_anterior|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div class="date-row">
+                <strong>Nueva Fecha:</strong>
+                <span>{{ fecha_nueva|date:"d/m/Y H:i" }}</span>
+            </div>
+            <div class="date-row">
+                <strong>Reprogramado por:</strong>
+                <span>{{ reprogramado_por.nombres }} {{ reprogramado_por.apellidos }}</span>
+            </div>
+        </div>
+        
+        {% if motivo %}
+        <div class="info-box">
+            <h4>📝 Motivo de Reprogramación</h4>
+            <p>{{ motivo }}</p>
+        </div>
+        {% else %}
+        <div class="alert">
+            <strong>Nota:</strong> No se especificó motivo para la reprogramación.
+        </div>
+        {% endif %}
+        
+        <div class="info-box">
+            <h4>🎫 Servicios Incluidos</h4>
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in servicios %}
+                    <tr>
+                        <td>{{ detalle.servicio.titulo }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>{{ detalle.precio_unitario }} {{ reserva.moneda }}</td>
+                        <td>{{ detalle.precio_unitario|floatformat:2 }} × {{ detalle.cantidad }} = 
+                            {% widthratio detalle.precio_unitario 1 detalle.cantidad %} {{ reserva.moneda }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if reserva.numero_reprogramaciones >= 2 %}
+        <div class="priority">
+            <strong>⚠️ Atención:</strong> Esta reserva ha sido reprogramada {{ reserva.numero_reprogramaciones }} veces. 
+            Considera contactar al cliente para confirmar su compromiso con la nueva fecha.
+        </div>
+        {% endif %}
+        
+        <div class="actions">
+            <h4>🔧 Acciones Recomendadas</h4>
+            <ul>
+                <li>Verificar disponibilidad de recursos para la nueva fecha</li>
+                <li>Confirmar disponibilidad de guías/personal</li>
+                <li>Actualizar calendarios y sistemas internos</li>
+                <li>Notificar a proveedores si es necesario</li>
+                {% if reserva.numero_reprogramaciones >= 2 %}
+                <li><strong>Contactar al cliente para confirmación adicional</strong></li>
+                {% endif %}
+            </ul>
+        </div>
+        
+        <p><strong>Fecha de reprogramación:</strong> {{ "now"|date:"d/m/Y H:i" }}</p>
+    </div>
+    
+    <div class="footer">
+        <p>Sistema de Gestión de Reservas - Notificación Automática</p>
+        <p>© {{ "now"|date:"Y" }} Turismo. Panel de Administración.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reprogramación de Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+        .alert {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .details {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .details h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .date-change {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .date-box {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            flex: 1;
+            margin: 0 5px;
+        }
+        .arrow {
+            font-size: 24px;
+            color: #007bff;
+        }
+        .services {
+            margin: 15px 0;
+        }
+        .service-item {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Reserva Reprogramada</h1>
+        <p>Tu reserva #{{ reserva.id }} ha sido reprogramada exitosamente</p>
+    </div>
+    
+    <div class="content">
+        <div class="alert">
+            <strong>¡Importante!</strong> Los detalles de tu reserva han cambiado. Por favor revisa la nueva información.
+        </div>
+        
+        <p>Hola <strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong>,</p>
+        
+        <p>Te confirmamos que tu reserva ha sido reprogramada según tu solicitud.</p>
+        
+        <div class="details">
+            <h3>📅 Cambio de Fecha</h3>
+            <div class="date-change">
+                <div class="date-box">
+                    <strong>Fecha Anterior</strong><br>
+                    {{ fecha_anterior|date:"d/m/Y" }}<br>
+                    {{ fecha_anterior|time:"H:i" }}
+                </div>
+                <div class="arrow">→</div>
+                <div class="date-box">
+                    <strong>Nueva Fecha</strong><br>
+                    {{ fecha_nueva|date:"d/m/Y" }}<br>
+                    {{ fecha_nueva|time:"H:i" }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="details">
+            <h3>📋 Detalles de la Reserva</h3>
+            <p><strong>Número de Reserva:</strong> #{{ reserva.id }}</p>
+            <p><strong>Estado:</strong> {{ reserva.estado }}</p>
+            <p><strong>Total:</strong> {{ reserva.total }} {{ reserva.moneda }}</p>
+            
+            {% if motivo %}
+            <p><strong>Motivo de Reprogramación:</strong></p>
+            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; border-left: 4px solid #ffc107;">
+                {{ motivo }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="details">
+            <h3>🎫 Servicios Incluidos</h3>
+            <div class="services">
+                {% for detalle in servicios %}
+                <div class="service-item">
+                    <strong>{{ detalle.servicio.titulo }}</strong><br>
+                    <small>Cantidad: {{ detalle.cantidad }} | Precio: {{ detalle.precio_unitario }} {{ reserva.moneda }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="alert">
+            <strong>💡 Recuerda:</strong> Asegúrate de estar disponible en la nueva fecha programada. Si necesitas hacer otro cambio, por favor contáctanos con al menos 24 horas de anticipación.
+        </div>
+        
+        <p>Si tienes alguna pregunta o necesitas asistencia adicional, no dudes en contactarnos.</p>
+        
+        <p>¡Esperamos verte pronto!</p>
+        
+        <p><strong>Equipo de Turismo</strong></p>
+    </div>
+    
+    <div class="footer">
+        <p>Este es un correo automático, por favor no respondas a esta dirección.</p>
+        <p>© {{ "now"|date:"Y" }} Turismo. Todos los derechos reservados.</p>
+    </div>
+</body>
+</html>

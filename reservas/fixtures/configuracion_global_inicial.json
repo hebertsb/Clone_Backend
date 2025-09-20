@@ -1,0 +1,90 @@
+[
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 1,
+    "fields": {
+      "clave": "EMAIL_NOTIFICACIONES",
+      "valor": "true",
+      "descripcion": "Habilitar envío de notificaciones por email cuando se reprograma una reserva",
+      "tipo_valor": "BOOLEAN",
+      "activa": true
+    }
+  },
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 2,
+    "fields": {
+      "clave": "ADMIN_EMAILS",
+      "valor": "admin@tuagencia.com,manager@tuagencia.com",
+      "descripcion": "Lista de emails de administradores que reciben notificaciones de reprogramaciones",
+      "tipo_valor": "LISTA",
+      "activa": true
+    }
+  },
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 3,
+    "fields": {
+      "clave": "RECORDATORIOS_ACTIVOS",
+      "valor": "true",
+      "descripcion": "Activar el envío automático de recordatorios para reservas reprogramadas",
+      "tipo_valor": "BOOLEAN",
+      "activa": true
+    }
+  },
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 4,
+    "fields": {
+      "clave": "DIAS_RECORDATORIO",
+      "valor": "1",
+      "descripcion": "Número de días antes de la reserva para enviar recordatorio automático",
+      "tipo_valor": "INTEGER",
+      "activa": true
+    }
+  },
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 5,
+    "fields": {
+      "clave": "LOG_REPROGRAMACIONES",
+      "valor": "true",
+      "descripcion": "Registrar logs detallados de todas las reprogramaciones en el sistema",
+      "tipo_valor": "BOOLEAN",
+      "activa": true
+    }
+  },
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 6,
+    "fields": {
+      "clave": "VALIDACION_ESTRICTA",
+      "valor": "false",
+      "descripcion": "Aplicar validaciones extra estrictas en las reprogramaciones",
+      "tipo_valor": "BOOLEAN",
+      "activa": true
+    }
+  },
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 7,
+    "fields": {
+      "clave": "TIMEZONE_REPROGRAMACIONES",
+      "valor": "America/La_Paz",
+      "descripcion": "Zona horaria a usar para validaciones de tiempo en reprogramaciones",
+      "tipo_valor": "STRING",
+      "activa": true
+    }
+  },
+  {
+    "model": "reservas.configuracionglobalreprogramacion",
+    "pk": 8,
+    "fields": {
+      "clave": "SUGERENCIAS_AUTOMATICAS",
+      "valor": "true",
+      "descripcion": "Generar sugerencias automáticas de fechas alternativas cuando una reprogramación no es válida",
+      "tipo_valor": "BOOLEAN",
+      "activa": true
+    }
+  }
+]
