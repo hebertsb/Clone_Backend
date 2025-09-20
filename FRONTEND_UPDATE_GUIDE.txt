@@ -1,0 +1,346 @@
+# 🎯 Guía de Integración Frontend - Sistema de Reprogramación de Reservas
+
+## 📋 Resumen Ejecutivo
+
+Esta guía contiene todos los endpoints necesarios para implementar la funcionalidad de reprogramación de reservas en el frontend.
+
+**Base URL**: `http://127.0.0.1:8000/api`
+
+## 🔐 Autenticación Requerida
+
+Todos los endpoints requieren autenticación JWT:
+```
+Headers:
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Credenciales de prueba**:
+- **Admin**: `gabriel.moreno@autonoma.edu.bo` / `admin123`
+- **Usuario**: `juan.perez@autonoma.edu.bo` / `admin123`
+
+---
+
+## 🏗️ ENDPOINTS PRINCIPALES DE RESERVAS
+
+### 1. Obtener Reserva con Información de Reprogramación
+```http
+GET /api/reservas/{id}/
+```
+
+**Respuesta incluye**:
+```json
+{
+    "id": 1005,
+    "usuario": {
+        "id": 1,
+        "nombres": "Gabriel",
+        "apellidos": "Moreno"
+    },
+    "estado": "CONFIRMADA",
+    "fecha_inicio": "2024-02-15T10:00:00Z",
+    "fecha_fin": "2024-02-15T18:00:00Z",
+    "numero_reprogramaciones": 0,
+    "fecha_original": "2024-02-15T10:00:00Z",
+    "puede_reprogramar": true,  // ⭐ CAMPO CLAVE
+    "historial_reprogramaciones": [],
+    "total": 150.00,
+    "detalles": [...]
+}
+```
+
+### 2. Verificar Si Puede Reprogramar (Endpoint Específico)
+```http
+GET /api/reservas/{id}/puede-reprogramar/
+```
+
+**Respuesta**:
+```json
+{
+    "puede_reprogramar": true,
+    "razon": "La reserva cumple todos los requisitos",
+    "reglas_aplicadas": [
+        {
+            "tipo": "TIEMPO_MINIMO",
+            "cumple": true,
+            "valor_requerido": "24 horas"
+        },
+        {
+            "tipo": "LIMITE_REPROGRAMACIONES", 
+            "cumple": true,
+            "valor_actual": "0/3"
+        }
+    ]
+}
+```
+
+### 3. Reprogramar Reserva
+```http
+POST /api/reservas/{id}/reprogramar/
+```
+
+**Payload**:
+```json
+{
+    "nueva_fecha": "2025-03-15T14:00:00Z",
+    "motivo": "Cliente solicitó cambio por compromisos laborales"
+}
+```
+
+**Respuesta exitosa**:
+```json
+{
+    "mensaje": "Reserva reprogramada exitosamente",
+    "reserva": {
+        "id": 1005,
+        "fecha_inicio": "2025-03-15T14:00:00Z",
+        "fecha_fin": "2025-03-15T22:00:00Z",
+        "numero_reprogramaciones": 1
+    },
+    "historial": {
+        "id": 5,
+        "fecha_anterior": "2024-02-15T10:00:00Z",
+        "fecha_nueva": "2024-03-15T14:00:00Z",
+        "motivo": "Cliente solicitó cambio por compromisos laborales"
+    }
+}
+```
+
+**Respuesta de error**:
+```json
+{
+    "error": "Reprogramación no permitida",
+    "detalles": {
+        "fecha_inicio": [
+            "La reprogramación debe hacerse con al menos 24 horas de anticipación."
+        ]
+    },
+    "reglas_violadas": [
+        {
+            "tipo": "TIEMPO_MINIMO",
+            "valor_requerido": 24,
+            "valor_proporcionado": 12,
+            "mensaje": "Debe reprogramar con al menos 24 horas de anticipación"
+        }
+    ]
+}
+```
+
+### 4. Historial de Reprogramaciones
+```http
+GET /api/reservas/{id}/historial-reprogramaciones/
+```
+
+**Respuesta**:
+```json
+[
+    {
+        "id": 1,
+        "fecha_anterior": "2024-01-15T10:00:00Z",
+        "fecha_nueva": "2024-02-15T10:00:00Z",
+        "motivo": "Cliente solicitó cambio",
+        "fecha_reprogramacion": "2024-01-10T15:30:00Z",
+        "usuario_responsable": "Gabriel Moreno"
+    }
+]
+```
+
+---
+
+## ⚙️ ENDPOINTS DE GESTIÓN DE REGLAS (Solo Admins)
+
+### 1. Obtener Reglas Activas
+```http
+GET /api/reglas-reprogramacion/activas/
+```
+
+**Respuesta**:
+```json
+[
+    {
+        "id": 2,
+        "nombre": "Límite reprogramaciones clientes",
+        "tipo_regla": "LIMITE_REPROGRAMACIONES",
+        "aplicable_a": "CLIENTE",
+        "valor_numerico": 3,
+        "activa": true,
+        "prioridad": 1,
+        "mensaje_error": "Ha alcanzado el límite máximo de 3 reprogramaciones por reserva."
+    },
+    {
+        "id": 1,
+        "nombre": "Tiempo mínimo estándar",
+        "tipo_regla": "TIEMPO_MINIMO",
+        "aplicable_a": "ALL",
+        "valor_numerico": 24,
+        "activa": true,
+        "mensaje_error": "Debe reprogramar con al menos 24 horas de anticipación."
+    }
+]
+```
+
+### 2. Crear Nueva Regla
+```http
+POST /api/reglas-reprogramacion/
+```
+
+**Payload**:
+```json
+{
+    "nombre": "Tiempo mínimo 48h para servicios premium",
+    "tipo_regla": "TIEMPO_MINIMO",
+    "aplicable_a": "CLIENTE",
+    "valor_numerico": 48,
+    "activa": true,
+    "prioridad": 1,
+    "mensaje_error": "Los servicios premium requieren 48 horas de anticipación"
+}
+```
+
+### 3. Agrupar Reglas por Tipo
+```http
+GET /api/reglas-reprogramacion/por-tipo/
+```
+
+### 4. Activar/Desactivar Regla
+```http
+POST /api/reglas-reprogramacion/{id}/activar/
+POST /api/reglas-reprogramacion/{id}/desactivar/
+```
+
+---
+
+## 🎨 FLUJO DE IMPLEMENTACIÓN FRONTEND
+
+### Paso 1: Mostrar Información de Reserva
+```javascript
+// 1. Obtener reserva con información de reprogramación
+const reserva = await fetch(`/api/reservas/${reservaId}/`);
+
+// 2. Mostrar si puede reprogramar
+if (reserva.puede_reprogramar) {
+    // Mostrar botón "Reprogramar"
+    mostrarBotonReprogramar();
+} else {
+    // Mostrar razón por la que no puede
+    mostrarMensaje("No se puede reprogramar esta reserva");
+}
+```
+
+### Paso 2: Verificación Adicional (Opcional)
+```javascript
+// Verificación detallada con reglas aplicadas
+const verificacion = await fetch(`/api/reservas/${reservaId}/puede-reprogramar/`);
+
+if (!verificacion.puede_reprogramar) {
+    // Mostrar reglas específicas que no cumple
+    mostrarReglasVioladas(verificacion.reglas_aplicadas);
+}
+```
+
+### Paso 3: Formulario de Reprogramación
+```javascript
+// Datos del formulario
+const datosReprogramacion = {
+    fecha_inicio: "2024-03-15T14:00:00Z",
+    fecha_fin: "2024-03-15T22:00:00Z",
+    motivo: "Cambio solicitado por el cliente"
+};
+
+try {
+    const resultado = await fetch(`/api/reservas/${reservaId}/reprogramar/`, {
+        method: 'POST',
+        body: JSON.stringify(datosReprogramacion)
+    });
+    
+    if (resultado.ok) {
+        mostrarMensajeExito("Reserva reprogramada exitosamente");
+        actualizarReserva(resultado.reserva);
+    }
+} catch (error) {
+    mostrarErroresValidacion(error.reglas_violadas);
+}
+```
+
+### Paso 4: Mostrar Historial
+```javascript
+// Obtener y mostrar historial de reprogramaciones
+const historial = await fetch(`/api/reservas/${reservaId}/historial-reprogramaciones/`);
+mostrarHistorialReprogramaciones(historial);
+```
+
+---
+
+## 📝 TIPOS DE REGLAS DISPONIBLES
+
+| Tipo | Descripción | Campo Valor |
+|------|-------------|-------------|
+| `TIEMPO_MINIMO` | Horas mínimas de anticipación | `valor_numerico` |
+| `TIEMPO_MAXIMO` | Horas máximas hacia el futuro | `valor_numerico` |
+| `LIMITE_REPROGRAMACIONES` | Máximo número de reprogramaciones | `valor_numerico` |
+| `DIAS_BLACKOUT` | Días no permitidos | `valor_texto` (JSON array) |
+| `HORAS_BLACKOUT` | Horas no permitidas | `valor_texto` (JSON array) |
+| `DESCUENTO_REPROGRAMACION` | % de descuento por reprogramar | `valor_decimal` |
+| `SERVICIOS_RESTRINGIDOS` | Servicios con restricciones | `valor_texto` (JSON array) |
+
+---
+
+## 🚨 MANEJO DE ERRORES
+
+### Errores Comunes y Respuestas
+
+**1. Token Expirado (401)**:
+```json
+{"detail": "Given token not valid for any token type"}
+```
+→ Redirigir a login
+
+**2. Reserva No Encontrada (404)**:
+```json
+{"detail": "No Reserva matches the given query."}
+```
+→ Mostrar mensaje "Reserva no encontrada"
+
+**3. Violación de Reglas (400)**:
+```json
+{
+    "error": "Reprogramación no permitida",
+    "reglas_violadas": [...]
+}
+```
+→ Mostrar errores específicos al usuario
+
+**4. Sin Permisos (403)**:
+```json
+{"detail": "Solo los administradores pueden gestionar reglas"}
+```
+→ Ocultar funcionalidades de admin
+
+---
+
+## ✅ CHECKLIST DE IMPLEMENTACIÓN
+
+- [ ] ✅ Endpoint `/api/reservas/{id}/` funcionando
+- [ ] ✅ Endpoint `/api/reservas/{id}/puede-reprogramar/` funcionando  
+- [ ] ✅ Endpoint `/api/reservas/{id}/reprogramar/` funcionando
+- [ ] ✅ Endpoint `/api/reservas/{id}/historial-reprogramaciones/` funcionando
+- [ ] ✅ Endpoint `/api/reglas-reprogramacion/activas/` funcionando
+- [ ] ✅ Manejo de errores y validaciones
+- [ ] ✅ Interfaz de usuario para reprogramación
+- [ ] ✅ Mostrar historial de reprogramaciones
+- [ ] ✅ Panel de administración de reglas (solo admins)
+
+---
+
+## 🎯 NOTAS IMPORTANTES
+
+1. **Todos los endpoints están verificados y funcionando** ✅
+2. **Las URLs NO llevan el prefijo `/reservas/`** - son directamente `/api/reglas-reprogramacion/`
+3. **El campo `puede_reprogramar` se calcula automáticamente** en cada respuesta de reserva
+4. **Las fechas deben enviarse en formato ISO 8601** con timezone
+5. **Solo usuarios ADMIN pueden gestionar reglas** de reprogramación
+6. **El historial se guarda automáticamente** en cada reprogramación
+
+---
+
+**¡Todos los endpoints están listos para ser consumidos por el frontend!** 🚀
